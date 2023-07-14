@@ -7,6 +7,8 @@ public class Chase : MonoBehaviour
     public string targetObjectName; // 대상 이름 string 변수
     public float speed = 1; // 적 속도
 
+    public static int death = 0;
+
     float vx; // x 지정
 
     public float AttackCoolTime;
@@ -28,7 +30,7 @@ public class Chase : MonoBehaviour
         anim = GetComponent<Animator>();
     }
 
-    void Start() 
+    void Start()
     {
         targetObject = GameObject.Find(targetObjectName); // 타겟을 찾는 코드
 
@@ -36,11 +38,13 @@ public class Chase : MonoBehaviour
         rbody.constraints = RigidbodyConstraints2D.FreezeRotation;
 
         AttackCoolDown = AttackCoolTime * 50;
+
+        death = 0;
     }
-    
+
     void Update()
     {
-        if (range)
+        if (range && (death == 0))
         {
             anim.SetBool("isRun", true);
         }
@@ -53,11 +57,11 @@ public class Chase : MonoBehaviour
     void FixedUpdate()
     {
 
-        if (range && !Attacking) // 만약 범위 안에 들어오면 쫒아가게 만드는 코드 ( 
+        if (range && !Attacking && (death == 0)) // 만약 범위 안에 들어오면 쫒아가게 만드는 코드 ( 공격중이 아니거나 죽은상태가 아닐때)
         {
             rbody.constraints = RigidbodyConstraints2D.FreezeRotation;
 
-            Vector3 dir = (targetObject.transform.position - this.transform.position).normalized; 
+            Vector3 dir = (targetObject.transform.position - this.transform.position).normalized;
 
             vx = dir.x * speed;
             rbody.velocity = new Vector2(vx, rbody.velocity.y);
@@ -79,16 +83,16 @@ public class Chase : MonoBehaviour
         else
         {
             rbody.constraints = RigidbodyConstraints2D.FreezePosition;
+            this.transform.rotation = Quaternion.Euler(0, 0, 0);
         }
 
         if (Enemy_AR.AttackRange)
         {
-            if (!Attacking && !AttackCool)
+            if (!Attacking && !AttackCool && (death == 0))
             {
                 anim.SetTrigger("isAttack");
                 Attacking = true;
-                AttackCool = true;
-                Invoke("Attack_ing1", 0.15f);
+                Invoke("Attack_ing1", 0.3f);
             }
         }
 
@@ -105,27 +109,38 @@ public class Chase : MonoBehaviour
 
         if (Enemy_HB.Hit == true)
         {
-            this.gameObject.SetActive(false);
+            if (death == 0)
+            {
+                death++;
+                anim.SetTrigger("isDeath");
+                this.GetComponent<BoxCollider2D>().enabled = false;
+                Invoke("Enemy_Death", 3.5f);
+            }
         }
+    }
+
+    private void Enemy_Death()
+    {
+        Destroy(gameObject);
     }
 
     private void Attack_ing1()
     {
         Attackmotion = true;
-        Invoke("Attack_ing2", 0.45f);
-        Invoke("Attack_ing3", 0.3f);
+        Invoke("Attack_ing2", 0.3f);
+        Invoke("Attack_ing3", 0.15f);
     }
 
     private void Attack_ing2()
     {
         Attacking = false;
+        AttackCool = true;
     }
 
     private void Attack_ing3()
     {
         Attackmotion = false;
     }
-
 
     void OnTriggerStay2D(UnityEngine.Collider2D collision)
     {

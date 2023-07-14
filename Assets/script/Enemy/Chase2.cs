@@ -4,15 +4,22 @@ using UnityEngine;
 
 public class Chase2 : MonoBehaviour
 {
+    public Player PlayerScript;
+
     public string targetObjectName; // 대상 이름 string 변수
     public float speed = 1; // 적 속도
+
+    public static int death = 0;
 
     float vx; // x 지정
 
     public float AttackCoolTime;
     float AttackCoolDown;
-    public static bool Attacking = false;
+    bool Attacking = false;
+    public static bool Attackmotion = false;
     bool AttackCool = false;
+
+    public static bool isLeft = true;
 
     bool IsGuard = false;
 
@@ -37,11 +44,13 @@ public class Chase2 : MonoBehaviour
         rbody.constraints = RigidbodyConstraints2D.FreezeRotation;
 
         AttackCoolDown = AttackCoolTime * 50;
+
+        death = 0;
     }
 
     void Update()
     {
-        if (range) // 거리안에 들어오면 애니메이션 활성화
+        if (range && (death == 0)) // 거리안에 들어오면 애니메이션 활성화
         {
             anim.SetBool("isRun", true);
         }
@@ -56,7 +65,7 @@ public class Chase2 : MonoBehaviour
     void FixedUpdate()
     {
 
-        if (range && !Attacking && !IsGuard) // 만약 범위 안에 들어오면 쫒아가게 만드는 코드 ( 공격중이나 방어중이 아닐때 )
+        if (range && !Attacking && !IsGuard && (death == 0)) // 만약 범위 안에 들어오면 쫒아가게 만드는 코드 ( 공격중이나 방어중이 아닐때, 죽은상태가 아닐때)
         {
             rbody.constraints = RigidbodyConstraints2D.FreezeRotation; // z방향 회전 고정, 위치 고정 해제
 
@@ -66,27 +75,38 @@ public class Chase2 : MonoBehaviour
             rbody.velocity = new Vector2(vx, rbody.velocity.y);
 
             this.GetComponent<SpriteRenderer>().flipX = (vx > 0); // 좌우 플립
+
+            if (vx > 0)
+            {
+                if (isLeft)
+                {
+                    isLeft = false;
+                }
+                else if (!isLeft)
+                {
+                    isLeft = true;
+                }
+            }
         }
         else // 범위 안에 플레이어가 없거나 공격중이거나 방어중일때
         {
             rbody.constraints = RigidbodyConstraints2D.FreezePosition; // 위치 고정
+            this.transform.rotation = Quaternion.Euler(0, 0, 0); // 회전 고정
         }
 
         if (Enemy_AR2.AttackRange) // 플레이어가 공격범위에 들어왔을때
         {
-            if (!Attacking && !AttackCool && ((RandomAttack == 1) || (RandomAttack == 3))) // 공격중이 아니며 쿨타임이 아니고 랜덤 변수 1을 받았을 때
+            if (!Attacking && !IsGuard && !AttackCool && (death == 0) && ((RandomAttack == 1) || (RandomAttack == 3))) // 공격중이 아니며 쿨타임이 아니고 죽은상태가 아니고 랜덤 변수 1 or 3을 받았을 때
             {
                 anim.SetTrigger("isAttack"); // 공격 모션 활성화
                 Attacking = true; // 공격중 변수 활성화
-                AttackCool = true; // 공격 쿨타임 변수 활성화
-                Invoke("Attack_ing", 0.8f); // 0.8초 후 지정 함수 실행 (공격 모션이 0.8초)
+                Invoke("Attack_ing1", 0.3f); // 0.15초 후 지정 함수 실행
             }
-            else if (!Attacking && !AttackCool && (RandomAttack == 2)) // 공격중이 아니며 쿨타임이 아니고 랜덤 변수 1을 받았을 때
+            else if (!Attacking && !IsGuard && !AttackCool && (death == 0) && (RandomAttack == 2)) // 공격중이 아니며 쿨타임이 아니고 랜덤 변수 1을 받았을 때
             {
                 anim.SetTrigger("isGuard"); // 방어 모션 활성화
                 IsGuard = true; // 방어중 변수 활성화
-                AttackCool = true; // 공격 쿨타임 변수 활성화
-                Invoke("Guard_ing", 1.6f); // 0.8초 후 지정 함수 실행 (방어 모션이 1.3초)
+                Invoke("Guard_ing", 1.6f); // 1.6초 후 지정 함수 실행
             }
         }
 
@@ -105,23 +125,49 @@ public class Chase2 : MonoBehaviour
         {
             if (!IsGuard)
             {
-                this.gameObject.SetActive(false);
+                if (death == 0)
+                {
+                    death++;
+                    anim.SetTrigger("isDeath");
+                    this.GetComponent<BoxCollider2D>().enabled = false;
+                    Invoke("Enemy_Death", 3.5f);
+                }
             }
             else if (IsGuard)
             {
-                targetObject.gameObject.SetActive(false);
+                PlayerScript.Player_Dead();
             }
         }
     }
 
-    private void Attack_ing() 
+    private void Enemy_Death()
     {
-        Attacking = false; // 공격중 변수 비활성화
+        Destroy(gameObject);
+    }
+
+    private void Attack_ing1() 
+    {
+        Attackmotion = true;
+        Invoke("Attack_ing2", 0.3f);
+        Invoke("Attack_ing3", 0.15f);
+    }
+
+    private void Attack_ing2()
+    {
+        Attacking = false;
+        AttackCool = true; // 공격 쿨타임 변수 활성화
+    }
+
+    private void Attack_ing3()
+    {
+        Attackmotion = false;
     }
 
     private void Guard_ing()
     {
         IsGuard = false; // 방어중 변수 비활성화
+        AttackCool = true; // 공격 쿨타임 변수 활성화
+        AttackCoolDown = AttackCoolDown + 50; // 방어는 1초 추가 쿨
     }
 
     void OnTriggerStay2D(UnityEngine.Collider2D collision) // 트리거 범위안에 콜라이더가 들어온 경우

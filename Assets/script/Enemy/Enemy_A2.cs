@@ -10,7 +10,7 @@ public class Enemy_A2 : MonoBehaviour
     {
         if (collision.gameObject.tag == ("Player_Hit")) // 플레이어가 범위 안에 들어오면
         {
-            if (Chase2.Attacking == true)
+            if (Chase2.Attackmotion == true)
             {
                 PlayerScript.Player_Dead();
             }

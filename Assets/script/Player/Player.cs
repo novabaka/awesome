@@ -7,6 +7,8 @@ public class Player : MonoBehaviour
     public float speed;
     public float jumppower;
 
+    int death = 0;
+
     float vx = 0;
     public static bool leftFlag = false;
     bool pushFlag = false;
@@ -28,6 +30,7 @@ public class Player : MonoBehaviour
     {
         rbody = GetComponent<Rigidbody2D>();
         rbody.constraints = RigidbodyConstraints2D.FreezeRotation;
+        death = 0;
     }
 
     void Update()
@@ -68,12 +71,12 @@ public class Player : MonoBehaviour
 
         if(Input.GetKeyDown("a"))
         {
-            if (!Attacking && groundFlag)
+            if (!Attacking && groundFlag && !Attackmotion)
             {
                 Attacking = true;
                 anim.SetTrigger("isAttack");
                 Invoke("Attack_ing", 0.73f);
-                Invoke("Attack_motion1", 0.15f);
+                Invoke("Attack_motion1", 0.325f);
             }
         }
     }
@@ -81,7 +84,7 @@ public class Player : MonoBehaviour
     private void Attack_motion1()
     {
         Attackmotion = true;
-        Invoke("Attack_motion2", 0.35f);
+        Invoke("Attack_motion2", 0.375f);
     }
 
     private void Attack_motion2()
@@ -106,7 +109,7 @@ public class Player : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (!Attacking)
+        if (!Attacking && (death == 0))
         {
             rbody.constraints = RigidbodyConstraints2D.FreezeRotation;
 
@@ -119,7 +122,7 @@ public class Player : MonoBehaviour
                 rbody.AddForce(new Vector2(0, jumppower), ForceMode2D.Impulse);
             }
         }
-        else if (Attacking)
+        else if (Attacking || (death >= 0))
         {
             rbody.constraints = RigidbodyConstraints2D.FreezePosition;
         }
@@ -138,6 +141,16 @@ public class Player : MonoBehaviour
 
     public void Player_Dead()
     {
-        this.gameObject.SetActive(false);
+        if (death == 0)
+        {
+            death++;
+            anim.SetTrigger("isDeath");
+            this.GetComponent<BoxCollider2D>().enabled = false;
+            Invoke("Player_Death", 1.35f);
+        }
+    }
+    public void Player_Death()
+    {
+        Destroy(gameObject);
     }
 }
