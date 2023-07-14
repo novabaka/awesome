@@ -606,11 +606,52 @@ PrefabInstance:
       propertyPath: m_Name
       value: PlayButton
       objectReference: {fileID: 0}
+    - target: {fileID: 5780032881339507774, guid: e5aebf2ea773cb54ca1fc1879b2a6116, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5780032881339507774, guid: e5aebf2ea773cb54ca1fc1879b2a6116, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 5950625376726324821}
+    - target: {fileID: 5780032881339507774, guid: e5aebf2ea773cb54ca1fc1879b2a6116, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: OnclickButton
+      objectReference: {fileID: 0}
+    - target: {fileID: 5780032881339507774, guid: e5aebf2ea773cb54ca1fc1879b2a6116, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: PlayButton, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 5780032881339507774, guid: e5aebf2ea773cb54ca1fc1879b2a6116, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 4274021929661290444, guid: e5aebf2ea773cb54ca1fc1879b2a6116, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5950625376726324821}
   m_SourcePrefab: {fileID: 100100000, guid: e5aebf2ea773cb54ca1fc1879b2a6116, type: 3}
+--- !u!1 &5950625376726324820 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4274021929661290444, guid: e5aebf2ea773cb54ca1fc1879b2a6116, type: 3}
+  m_PrefabInstance: {fileID: 5950625376726324819}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &5950625376726324821
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5950625376726324820}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fd3479d1e5c255e4f9295fe0ff25fc2d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneName: main
 --- !u!1001 &7598536586611360349
 PrefabInstance:
   m_ObjectHideFlags: 0
