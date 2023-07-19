@@ -3,7 +3,15 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - block
+  - Enemy
+  - PlayerHitBox
+  - EnemyHitBox
+  - Projectile
+  - Check
+  - PlayerWeapon
+  - PlayerWeapon2
   layers:
   - Default
   - TransparentFX
@@ -12,17 +20,17 @@ TagManager:
   - Water
   - UI
   - 
+  - Check
+  - 
+  - Player
+  - Platform
+  - PlayerHitBox
+  - PlayerWeapon
   - 
   - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - Projectile
+  - Enemy
+  - EnemyHitBox
   - 
   - 
   - 
