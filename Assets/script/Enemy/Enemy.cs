@@ -131,7 +131,7 @@ public class Enemy : MonoBehaviour
     IEnumerator WaitRoutine(float waitTime)
     {
         yield return new WaitForSeconds(waitTime);
-        rb.constraints = RigidbodyConstraints2D.FreezeAll;
+        rb.constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezeRotation;
         yield return new WaitForSeconds(waitTime);
         Destroy(gameObject);
     }
@@ -149,13 +149,13 @@ public class Enemy : MonoBehaviour
             {
                 MyAnimSetTrigger("Death");
                 DeathOn = true;
-                rb.constraints = RigidbodyConstraints2D.FreezeAll;
+                rb.constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezeRotation;
                 StartCoroutine(WaitRoutine(0.5f));
             }
             else if (!DeathUse)
             {
                 DeathOn = true;
-                rb.constraints = RigidbodyConstraints2D.FreezeAll;
+                rb.constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezeRotation;
                 StartCoroutine(WaitRoutine(0.1f));
             }
         }
@@ -199,7 +199,7 @@ public class Enemy : MonoBehaviour
             }
             /*if (collision.transform.CompareTag("PlayerWeapon"))
             {
-                TakeDamage();
+                
             }*/
         }
     }

@@ -16,6 +16,8 @@ public class LightKnight : Enemy
     public GameObject AttackBoxCollider;
     public GameObject GuardBoxCollider;
 
+    bool atking = false;
+
     public Transform[] wallCheck;
     WaitForSeconds Delay500 = new WaitForSeconds(0.5f);
 
@@ -56,15 +58,18 @@ public class LightKnight : Enemy
             runTime -= Time.deltaTime;
             if (!isHit && !DeathOn)
             {
-                if (currentState != State.Attack)
+                if (!atking)
                 {
                     rb.constraints = RigidbodyConstraints2D.FreezeRotation;
+                    MyAnimSetTrigger("Run");
+                    rb.velocity = new Vector2(-transform.localScale.x * moveSpeed, rb.velocity.y);
+                }
+                else if (atking)
+                {
+                    rb.constraints = RigidbodyConstraints2D.FreezeAll;
                 }
 
-                MyAnimSetTrigger("Run");
-                rb.velocity = new Vector2(-transform.localScale.x * moveSpeed, rb.velocity.y);
-
-                //Mushroom Update
+                
                 if (Physics2D.OverlapCircle(wallCheck[0].position, 0.01f, layerMask))
                 {
                     EnemyFlip();
@@ -110,12 +115,14 @@ public class LightKnight : Enemy
         {
             if (!isGuard)
             {
+                atking = true;
                 canAtk = false;
                 MyAnimSetTrigger("Attack");
                 rb.constraints = RigidbodyConstraints2D.FreezeAll;
             }
             else if (isGuard)
             {
+                atking = true;
                 canAtk = false;
                 MyAnimSetTrigger("Guard");
                 rb.constraints = RigidbodyConstraints2D.FreezeAll;
@@ -149,6 +156,7 @@ public class LightKnight : Enemy
             GuardBoxCollider.SetActive(false);
             rb.constraints = RigidbodyConstraints2D.FreezeRotation;
         }
+        atking = false;
         currentState = State.Idle;
     }
 

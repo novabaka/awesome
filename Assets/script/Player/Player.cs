@@ -8,6 +8,8 @@ public class Player : MonoBehaviour
     public float speed;
     public float jumppower;
 
+    public int PlayerHp;
+
     int Weaponnum = 0;
 
     int count1 = 0;
@@ -15,12 +17,9 @@ public class Player : MonoBehaviour
     int count3 = 0;
     int count4 = 0;
 
-    bool isHit = false;
+    bool IsHit = false;
+    public float hitRecovery = 0.2f;
     int death = 0;
-
-    float motions1 = 0.325f;
-    float motions2 = 0.375f;
-    float motions3;
 
     int AttackBox = 0;
     bool AttackBoxs = false;
@@ -40,6 +39,7 @@ public class Player : MonoBehaviour
     Animator anim; // 애니메이터 가져오는 코드
 
     public GameObject AttackBoxCollider;
+    public GameObject AttackBoxTransform;
     //public GameObject AttackBoxCollider2;
     public GameObject hitBoxCollider;
 
@@ -48,7 +48,21 @@ public class Player : MonoBehaviour
         anim = GetComponent<Animator>();
         AttackBoxCollider.SetActive(false);
         //AttackBoxCollider2.SetActive(false);
+        StartCoroutine(ResetCollider());
 
+    }
+
+    IEnumerator ResetCollider()
+    {
+        while (true)
+        {
+            yield return null;
+            if (!hitBoxCollider.activeInHierarchy)
+            {
+                yield return new WaitForSeconds(hitRecovery);
+                hitBoxCollider.SetActive(true);
+            }
+        }
     }
 
     void Start()
@@ -56,53 +70,55 @@ public class Player : MonoBehaviour
         rbody = GetComponent<Rigidbody2D>();
         rbody.constraints = RigidbodyConstraints2D.FreezeRotation;
         death = 0;
-        motions3 = motions1 + motions2;
     }
 
     void Update()
     {
         vx = 0;
-        if (Input.GetKey("right"))
+        if (!IsHit)
         {
-            vx = speed;
-            leftFlag = false;
-            Invoke("AnimOn", 0);
-        }
-        if (Input.GetKey("left"))
-        {
-            vx = -speed;
-            leftFlag = true;
-            Invoke("AnimOn", 0);
-        }
-        if (Input.GetKeyUp("right"))
-        {
-            Invoke("AnimOff", 0);
-        }
-        if (Input.GetKeyUp("left"))
-        {
-            Invoke("AnimOff", 0);
-        }
-        if (Input.GetKey("space") && groundFlag)
-        {
-            if (pushFlag == false)
+            if (Input.GetKey("right"))
             {
-                jumpFlag = true;
-                pushFlag = true;
+                vx = speed;
+                leftFlag = false;
+                Invoke("AnimOn", 0);
             }
-        }
-        else
-        {
-            pushFlag = false;
-        }
-
-        if(Input.GetKeyDown("a"))
-        {
-            if (!Attacking && groundFlag && !Attackmotion)
+            if (Input.GetKey("left"))
             {
-                Attacking = true;
-                anim.SetTrigger("isAttack");
-                Invoke("Attack_ing", 0.8f);
-                
+                vx = -speed;
+                leftFlag = true;
+                Invoke("AnimOn", 0);
+            }
+            if (Input.GetKeyUp("right"))
+            {
+                Invoke("AnimOff", 0);
+            }
+            if (Input.GetKeyUp("left"))
+            {
+                Invoke("AnimOff", 0);
+            }
+            if (Input.GetKey("space") && groundFlag)
+            {
+                if (pushFlag == false)
+                {
+                    jumpFlag = true;
+                    pushFlag = true;
+                }
+            }
+            else
+            {
+                pushFlag = false;
+            }
+
+            if (Input.GetKeyDown("a"))
+            {
+                if (!Attacking && groundFlag && !Attackmotion)
+                {
+                    Attacking = true;
+                    anim.SetTrigger("isAttack");
+                    Invoke("Attack_ing", 0.8f);
+
+                }
             }
         }
 
@@ -208,7 +224,7 @@ public class Player : MonoBehaviour
                 rbody.AddForce(new Vector2(0, jumppower), ForceMode2D.Impulse);
             }
         }
-        else if (Attacking || (death >= 0))
+        else if (Attacking)
         {
             rbody.constraints = RigidbodyConstraints2D.FreezeAll;
         }
@@ -225,22 +241,6 @@ public class Player : MonoBehaviour
         groundFlag = false;
     }
 
-    /* public void Player_Dead()
-    {
-        if (death == 0)
-        {
-            death++;
-            anim.SetTrigger("isDeath");
-            this.GetComponent<BoxCollider2D>().enabled = false;
-            Invoke("Player_Death", 1.35f);
-        }
-    }
-    
-    public void Player_Death()
-    {
-        Destroy(gameObject);
-    }
-    */
     private void AttackBox1()
     {
         AttackBox++;
@@ -258,6 +258,7 @@ public class Player : MonoBehaviour
     private void AttackBox2()
     {
         AttackBox = 0;
+        AttackBoxCollider.transform.position = AttackBoxTransform.transform.position;
         AttackBoxCollider.SetActive(false);
         Attackmotion = false;
 
@@ -272,17 +273,55 @@ public class Player : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.transform.CompareTag("Enemy") || collision.transform.CompareTag("Projectile"))
+        if (collision.transform.CompareTag("EnemyAttackBox") || collision.transform.CompareTag("Projectile"))
         {
             if (collision.transform.CompareTag("Projectile"))
             {
                 Destroy(collision.gameObject, 0.02f);
             }
+            if (!IsHit)
+            {
+                PlayerHp--;
+                IsHit = true;
+            }
+            if (PlayerHp > 0)
+            {
+                rbody.velocity = Vector2.zero;
+                Invoke("isHitReset", 0.5f);
+                hitBoxCollider.SetActive(false);
+                anim.SetTrigger("isHurt");
+                rbody.constraints = RigidbodyConstraints2D.FreezeRotation;
 
-            rbody.velocity = Vector2.zero;
-            isHit = true;
-            hitBoxCollider.SetActive(false);
-            
+                if (transform.position.x > collision.transform.position.x)
+                {
+                    rbody.AddForce(new Vector2(70, 2), ForceMode2D.Impulse);
+                }
+                else
+                {
+                    rbody.AddForce(new Vector2(-70, 2), ForceMode2D.Impulse);
+                }
+                AttackBox2();
+            }
+            else if (PlayerHp <= 0)
+            {
+                if (death == 0)
+                {
+                    death++;
+                    rbody.constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezeRotation;
+                    anim.SetTrigger("isDeath");
+                    Invoke("Death", 1.2f);
+                }
+            }
         }
+    }
+
+    void isHitReset()
+    {
+        IsHit = false;
+    }
+
+    void Death()
+    {
+        Destroy(gameObject);
     }
 }
