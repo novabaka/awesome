@@ -63,6 +63,17 @@ public class LightKnight : Enemy
                     rb.constraints = RigidbodyConstraints2D.FreezeRotation;
                     MyAnimSetTrigger("Run");
                     rb.velocity = new Vector2(-transform.localScale.x * moveSpeed, rb.velocity.y);
+
+                    if (Vector2.Distance(transform.position, PlayerData.Instance.Player.transform.position) > 3.5f)
+                    {
+                        if (Vector2.Distance(transform.position, PlayerData.Instance.Player.transform.position) < 8.5f)
+                        {
+                            if (!IsPlayerDir())
+                            {
+                                EnemyFlip();
+                            }
+                        }
+                    }
                 }
                 else if (atking)
                 {
@@ -79,23 +90,16 @@ public class LightKnight : Enemy
                 {
                     if (Vector2.Distance(transform.position, PlayerData.Instance.Player.transform.position) < 7.5f)
                     {
-                        if (currentState != State.Attack)
-                        {
-                            if (!IsPlayerDir())
-                            {
-                                EnemyFlip();
-                            }
-                        }
                         if (Physics2D.OverlapCircle(wallCheck[0].position, 0.01f, layerMask2))
                         {
-                            RandomAtk = Random.Range(1, 4);
+                            RandomAtk = Random.Range(1, 5);
                             
-                            if (RandomAtk == 1 || RandomAtk == 2)
+                            if (RandomAtk == 1 || RandomAtk == 2 || RandomAtk == 3)
                             {
                                 isGuard = false;
                                 currentState = State.Attack;
                             }
-                            else if (RandomAtk == 3)
+                            else if (RandomAtk == 4)
                             {
                                 isGuard = true;
                                 currentState = State.Attack;
@@ -133,7 +137,7 @@ public class LightKnight : Enemy
             currentState = State.Run;
         }
     }
-    private void AttackStart()
+    void AttackStart()
     {
         if (!isGuard)
         {
@@ -144,7 +148,7 @@ public class LightKnight : Enemy
             GuardBoxCollider.SetActive(true);
         }
     }
-    private void AttackEnd()
+    void AttackEnd()
     {
         if (!isGuard)
         {
@@ -166,6 +170,15 @@ public class LightKnight : Enemy
         if (!isHit && isGround && !IsPlayingAnim("Run"))
         {
             MyAnimSetTrigger("Idle");
+        }
+    }
+
+    void FixedUpdate()
+    {
+        if (Hit_ing)
+        {
+            Hit_ing = false;
+            AttackEnd();
         }
     }
 }

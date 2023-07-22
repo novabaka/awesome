@@ -9,7 +9,8 @@ public class Enemy : MonoBehaviour
     public bool DeathOn = false;
     public bool DamOn = false;
     public bool DeathUse;
-    
+
+    public bool Hit_ing = false;
     public bool Attack_ing = false;
 
     public int enemyHp = 1;
@@ -49,7 +50,7 @@ public class Enemy : MonoBehaviour
             yield return null;
             if (!hitBoxCollider.activeInHierarchy)
             {
-                yield return new WaitForSeconds(0.5f);
+                yield return new WaitForSeconds(0.4f);
                 hitBoxCollider.SetActive(true);
                 isHit = false;
                 DamOn = false;
@@ -150,7 +151,7 @@ public class Enemy : MonoBehaviour
                 MyAnimSetTrigger("Death");
                 DeathOn = true;
                 rb.constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezeRotation;
-                StartCoroutine(WaitRoutine(0.5f));
+                StartCoroutine(WaitRoutine(0.4f));
             }
             else if (!DeathUse)
             {
@@ -161,6 +162,7 @@ public class Enemy : MonoBehaviour
         }
         else
         {
+            Hit_ing = true;
             MyAnimSetTrigger("Hit");
             rb.velocity = Vector2.zero;
             if (transform.position.x > PlayerData.Instance.Player.transform.position.x)

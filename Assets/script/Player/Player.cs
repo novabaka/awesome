@@ -12,6 +12,8 @@ public class Player : MonoBehaviour
 
     int Weaponnum = 0;
 
+    bool GAtkcheck = false;
+
     int count1 = 0;
     int count2 = 0;
     int count3 = 0;
@@ -75,7 +77,7 @@ public class Player : MonoBehaviour
     void Update()
     {
         vx = 0;
-        if (!IsHit)
+        if (!IsHit && !Attacking)
         {
             if (Input.GetKey("right"))
             {
@@ -138,7 +140,14 @@ public class Player : MonoBehaviour
                 if (!AttackBoxs)
                 {
                     AttackBoxs = true;
-                    AttackBoxCollider.transform.rotation = Quaternion.Euler(0, 0, -90f);
+                    if (leftFlag)
+                    {
+                        AttackBoxCollider.transform.rotation = Quaternion.Euler(0, 0, 90f);
+                    }
+                    if (!leftFlag)
+                    {
+                        AttackBoxCollider.transform.rotation = Quaternion.Euler(0, 0, -90f);
+                    }
                 }
                 if (count2 < 10)
                 {
@@ -165,6 +174,34 @@ public class Player : MonoBehaviour
                 {
                     count4++;
                     AttackBoxCollider.transform.Translate(-0.16f, 0, 0);
+                }
+            }
+        }
+        if (!GAtkcheck)
+        {
+            if (Weapons.GuardingAtk == true)
+            {
+                GAtkcheck = true;
+                Invoke("GAtkCheck", 1f);
+                if (PlayerHp > 0)
+                {
+                    rbody.velocity = Vector2.zero;
+                    Invoke("isHitReset", 0.5f);
+                    hitBoxCollider.SetActive(false);
+                    anim.SetTrigger("isHurt");
+                    rbody.constraints = RigidbodyConstraints2D.FreezeRotation;
+                    rbody.AddForce(new Vector2(0, 2), ForceMode2D.Impulse);
+                    AttackBox2();
+                }
+                else if (PlayerHp <= 0)
+                {
+                    if (death == 0)
+                    {
+                        death++;
+                        rbody.constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezeRotation;
+                        anim.SetTrigger("isDeath");
+                        Invoke("Death", 1.2f);
+                    }
                 }
             }
         }
@@ -229,13 +266,14 @@ public class Player : MonoBehaviour
             rbody.constraints = RigidbodyConstraints2D.FreezeAll;
         }
     }
-    private void OnTriggerStay2D(UnityEngine.Collider2D collision)
+    void OnTriggerStay2D(Collider2D collision)
     {
         if (collision.gameObject.tag == ("block"))
         {
             groundFlag = true;
         }
     }
+
     void OnTriggerExit2D(Collider2D collision)
     {
         groundFlag = false;
@@ -271,19 +309,22 @@ public class Player : MonoBehaviour
         count4 = 0;
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.transform.CompareTag("EnemyAttackBox") || collision.transform.CompareTag("Projectile"))
         {
+            Invoke("information", 0.7f);
             if (collision.transform.CompareTag("Projectile"))
             {
                 Destroy(collision.gameObject, 0.02f);
             }
+
             if (!IsHit)
             {
                 PlayerHp--;
                 IsHit = true;
             }
+
             if (PlayerHp > 0)
             {
                 rbody.velocity = Vector2.zero;
@@ -318,6 +359,11 @@ public class Player : MonoBehaviour
     void isHitReset()
     {
         IsHit = false;
+    }
+
+    void GAtkCheck()
+    {
+        GAtkcheck = false;
     }
 
     void Death()

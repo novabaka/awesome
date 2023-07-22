@@ -32,6 +32,14 @@ public class BlueKnight : Enemy
                 EnemyFlip();
             }
 
+            if (Vector2.Distance(transform.position, PlayerData.Instance.Player.transform.position) < 7.5f)
+            {
+                if (!IsPlayerDir() && canAtk)
+                {
+                    EnemyFlip();
+                }
+            }
+
             if (Physics2D.OverlapCircle(wallCheck[0].position, 0.01f, layerMask2))
             {
                 if (canAtk)
@@ -47,13 +55,21 @@ public class BlueKnight : Enemy
             rb.constraints = RigidbodyConstraints2D.FreezeAll;
         }
     }
-    private void Attacking()
+    void Attacking()
     {
         AttackBoxCollider.SetActive(true);
     }
-    private void AttackEnd()
+    void AttackEnd()
     {
         AttackBoxCollider.SetActive(false);
         Attack_ing = false;
+    }
+    void FixedUpdate()
+    {
+        if (Hit_ing)
+        {
+            Hit_ing = false;
+            AttackEnd();
+        }
     }
 }

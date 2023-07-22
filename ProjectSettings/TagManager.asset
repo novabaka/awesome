@@ -13,6 +13,7 @@ TagManager:
   - PlayerWeapon
   - PlayerWeapon2
   - EnemyAttackBox
+  - EnemyGuardBox
   layers:
   - Default
   - TransparentFX
@@ -33,7 +34,7 @@ TagManager:
   - Enemy
   - EnemyHitBox
   - EnemyAttackBox
-  - 
+  - EnemyGuardBox
   - 
   - 
   - 
