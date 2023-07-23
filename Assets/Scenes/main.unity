@@ -787,7 +787,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 20636af74dcae8748bb4e8ba746af4f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PlayerScript: {fileID: 0}
+  PlayerScript: {fileID: 450822626}
 --- !u!61 &272748456
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -2424,7 +2424,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 20636af74dcae8748bb4e8ba746af4f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PlayerScript: {fileID: 0}
+  PlayerScript: {fileID: 450822626}
 --- !u!61 &1966042593
 BoxCollider2D:
   m_ObjectHideFlags: 0
