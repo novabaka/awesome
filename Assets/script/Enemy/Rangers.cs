@@ -15,8 +15,10 @@ public class Rangers : Enemy
     public Transform[] wallCheck;
     public Transform genPoint;
     public GameObject Bullet;
+    public GameObject MeleeAttackBox;
 
     WaitForSeconds Delay1000 = new WaitForSeconds(1f);
+    WaitForSeconds Delay300 = new WaitForSeconds(0.3f);
 
     void Awake()
     {
@@ -24,9 +26,10 @@ public class Rangers : Enemy
         moveSpeed = 1f;
         jumpPower = 15f;
         enemyHp = 2;
-        atkCoolTime = 3f;
+        atkCoolTime = 3.5f;
         atkCoolTimeCalc = atkCoolTime;
         DeathUse = false;
+        MeleeAttackBox.SetActive(false);
 
         StartCoroutine(FSM());
     }
@@ -76,6 +79,7 @@ public class Rangers : Enemy
                         {
                             EnemyFlip();
                         }
+                        canAtk = false;
                         currentState = State.Attack;
                         break;
                     }
@@ -99,9 +103,21 @@ public class Rangers : Enemy
     {
         yield return null;
 
-        canAtk = false;
-
-        MyAnimSetTrigger("Attack");
+        if (Vector2.Distance(transform.position, PlayerData.Instance.Player.transform.position) < 1.8f)
+        {
+            if (!IsPlayerDir())
+            {
+                EnemyFlip();
+            }
+            yield return Delay300;
+            MeleeAttackBox.SetActive(true);
+            yield return Delay300;
+            MeleeAttackBox.SetActive(false);
+        }
+        else if (Vector2.Distance(transform.position, PlayerData.Instance.Player.transform.position) < 15f)
+        {
+            MyAnimSetTrigger("Attack");
+        }
 
         yield return Delay1000;
         currentState = State.Idle;
