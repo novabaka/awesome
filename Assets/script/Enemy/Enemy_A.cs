@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Enemy_A : MonoBehaviour
 {
-    public Player PlayerScript;
+    public Player_Move PlayerScript;
 
     void OnTriggerEnter2D(UnityEngine.Collider2D collision)
     {

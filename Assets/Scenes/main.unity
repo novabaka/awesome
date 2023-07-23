@@ -787,7 +787,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 20636af74dcae8748bb4e8ba746af4f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PlayerScript: {fileID: 450822625}
+  PlayerScript: {fileID: 0}
 --- !u!61 &272748456
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -846,8 +846,7 @@ GameObject:
   - component: {fileID: 450822619}
   - component: {fileID: 450822618}
   - component: {fileID: 450822617}
-  - component: {fileID: 450822625}
-  - component: {fileID: 450822624}
+  - component: {fileID: 450822626}
   - component: {fileID: 450822622}
   - component: {fileID: 450822623}
   m_Layer: 9
@@ -1076,14 +1075,14 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &450822624
+--- !u!114 &450822626
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 450822615}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d2def726204f0ce47a29a34c09878bf6, type: 3}
   m_Name: 
@@ -1098,20 +1097,6 @@ MonoBehaviour:
   Attackmotion: 0
   rbody: {fileID: 0}
   anim: {fileID: 0}
---- !u!114 &450822625
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 450822615}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0aac6708b1a20734caa629cebaba5bce, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  speed: 3
-  jumppower: 6
 --- !u!1 &529371130
 GameObject:
   m_ObjectHideFlags: 0
@@ -1343,7 +1328,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 53acb53364e68d94e987a078dfd87a29, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PlayerScript: {fileID: 450822625}
+  PlayerScript: {fileID: 0}
 --- !u!61 &907860178
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1610,6 +1595,22 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6311031034145651071, guid: 5ed5291019aaa1f4f83eba69acf225fc, type: 3}
+      propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 450822626}
+    - target: {fileID: 6311031034145651071, guid: 5ed5291019aaa1f4f83eba69acf225fc, type: 3}
+      propertyPath: m_Delegates.Array.data[1].callback.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 450822626}
+    - target: {fileID: 6311031034145651071, guid: 5ed5291019aaa1f4f83eba69acf225fc, type: 3}
+      propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: PointerDownRight
+      objectReference: {fileID: 0}
+    - target: {fileID: 6311031034145651071, guid: 5ed5291019aaa1f4f83eba69acf225fc, type: 3}
+      propertyPath: m_Delegates.Array.data[1].callback.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: PointerUpRight
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1631,6 +1632,14 @@ PrefabInstance:
     - target: {fileID: 1560979453543398349, guid: ef45d01d8c737a049b740ada5e37716d, type: 3}
       propertyPath: m_Name
       value: SkillButton
+      objectReference: {fileID: 0}
+    - target: {fileID: 2021099652130316509, guid: ef45d01d8c737a049b740ada5e37716d, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
+      value: 
+      objectReference: {fileID: 450822626}
+    - target: {fileID: 2021099652130316509, guid: ef45d01d8c737a049b740ada5e37716d, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
+      value: PointerDownAttack
       objectReference: {fileID: 0}
     - target: {fileID: 2440073650457830550, guid: ef45d01d8c737a049b740ada5e37716d, type: 3}
       propertyPath: m_Pivot.x
@@ -1771,7 +1780,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 53acb53364e68d94e987a078dfd87a29, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PlayerScript: {fileID: 450822625}
+  PlayerScript: {fileID: 0}
 --- !u!61 &1291674821
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -2007,10 +2016,18 @@ PrefabInstance:
     - target: {fileID: 8471994391115576374, guid: cfa97369b42effe4699640c21cf7ca80, type: 3}
       propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 450822615}
+      objectReference: {fileID: 450822626}
+    - target: {fileID: 8471994391115576374, guid: cfa97369b42effe4699640c21cf7ca80, type: 3}
+      propertyPath: m_Delegates.Array.data[1].callback.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 450822626}
     - target: {fileID: 8471994391115576374, guid: cfa97369b42effe4699640c21cf7ca80, type: 3}
       propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: 
+      value: PointerDownLeft
+      objectReference: {fileID: 0}
+    - target: {fileID: 8471994391115576374, guid: cfa97369b42effe4699640c21cf7ca80, type: 3}
+      propertyPath: m_Delegates.Array.data[1].callback.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: PointerUpLeft
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2407,7 +2424,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 20636af74dcae8748bb4e8ba746af4f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PlayerScript: {fileID: 450822625}
+  PlayerScript: {fileID: 0}
 --- !u!61 &1966042593
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -2645,7 +2662,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 44b6341d7e960f242bb45764154fcd97, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PlayerScript: {fileID: 450822625}
+  PlayerScript: {fileID: 0}
   targetObjectName: Player
   speed: 2.5
   AttackCoolTime: 1

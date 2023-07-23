@@ -1,9 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Player_Move : MonoBehaviour
 {
+
     public float speed;
     [SerializeField] float jumppower;
 
@@ -203,6 +205,6 @@ public class Player_Move : MonoBehaviour
     }
     public void Player_Death()
     {
-        Destroy(gameObject);
+        SceneManager.LoadScene("GameOver");
     }
 }
