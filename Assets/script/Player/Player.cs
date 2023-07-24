@@ -8,6 +8,16 @@ public class Player : MonoBehaviour
     public float speed;
     public float jumppower;
 
+    public static bool Guarding = false;
+    float GuardCool = 1f;
+    public float GuardCoolCalc = 1f;
+    bool canGuard = true;
+
+    bool knuckling = false;
+    float KnuckleCool = 5f;
+    public float KnuckleCoolCalc = 5f;
+    bool canKnuckle = true;
+
     bool DamLeftFlag;
 
     bool Dashing = false;
@@ -52,17 +62,61 @@ public class Player : MonoBehaviour
 
     public GameObject AttackBoxCollider;
     public GameObject AttackBoxTransform;
-    //public GameObject AttackBoxCollider2;
+    public GameObject AttackBoxCollider2;
     public GameObject hitBoxCollider;
+    public GameObject ParryingAttack;
 
     void Awake()
     {
         anim = GetComponent<Animator>();
         AttackBoxCollider.SetActive(false);
-        //AttackBoxCollider2.SetActive(false);
+        AttackBoxCollider2.SetActive(false);
+        ParryingAttack.SetActive(false);
+
+        GuardCool = 1f;
+        GuardCoolCalc = GuardCool;
+        KnuckleCool = 5f;
+        KnuckleCoolCalc = KnuckleCool;
+
         StartCoroutine(ResetCollider());
         StartCoroutine(Dash());
         StartCoroutine(DashGauge());
+        StartCoroutine(GuardCoolTime());
+        StartCoroutine(KnuckleCoolTime());
+    }
+
+    IEnumerator GuardCoolTime()
+    {
+        while (true)
+        {
+            yield return null;
+            if (!canGuard)
+            {
+                GuardCoolCalc -= Time.deltaTime;
+                if (GuardCoolCalc <= 0)
+                {
+                    GuardCoolCalc = GuardCool;
+                    canGuard = true;
+                }
+            }
+        }
+    }
+
+    IEnumerator KnuckleCoolTime()
+    {
+        while (true)
+        {
+            yield return null;
+            if (!canKnuckle)
+            {
+                KnuckleCoolCalc -= Time.deltaTime;
+                if (KnuckleCoolCalc <= 0)
+                {
+                    KnuckleCoolCalc = KnuckleCool;
+                    canKnuckle = true;
+                }
+            }
+        }
     }
 
     IEnumerator ResetCollider()
@@ -167,63 +221,121 @@ public class Player : MonoBehaviour
             Dashing = false;
         }
     }
+    void RightP()
+    {
+        vx = speed;
+        leftFlag = false;
+        anim.SetBool("isRun", true);
+    }
+    void LeftP()
+    {
+        vx = -speed;
+        leftFlag = true;
+        anim.SetBool("isRun", true);
+    }
+    void RightD()
+    {
+        if (RDashing && Timer >= 3)
+        {
+            Dashing = true;
+            StartCoroutine(DashOn(0.01f));
+        }
+        RDashing = true;
+        LDashing = false;
+        RDashCount = 0.2f;
+        LDashCount = 0;
+    }
+    void LeftD()
+    {
+        if (LDashing && Timer >= 3)
+        {
+            Dashing = true;
+            StartCoroutine(DashOn(0.01f));
+        }
+        LDashing = true;
+        RDashing = false;
+        LDashCount = 0.2f;
+        RDashCount = 0;
+    }
+    void RightLeftU()
+    {
+        anim.SetBool("isRun", false);
+    }
+    void SpaceDown()
+    {
+        if (pushFlag == false)
+        {
+            jumpFlag = true;
+            pushFlag = true;
+        }
+    }
+    void ADown()
+    {
+        if (!Attacking && groundFlag && !Attackmotion && !Guarding && !knuckling)
+        {
+            Attacking = true;
+            anim.SetTrigger("isAttack");
+            Invoke("Attack_ing", 0.8f);
+
+        }
+    }
+    void SDown()
+    {
+        if (!Attacking && groundFlag && !Attackmotion && !Guarding && !knuckling)
+        {
+            if (canGuard)
+            {
+                Guarding = true;
+                anim.SetTrigger("isGuard");
+                rbody.constraints = RigidbodyConstraints2D.FreezeAll;
+            }
+        }
+    }
+    void DDown()
+    {
+        if (!Attacking && groundFlag && !Attackmotion && !Guarding && !knuckling)
+        {
+            if (canKnuckle)
+            {
+                knuckling = true;
+                anim.SetTrigger("isKnuckle");
+                rbody.constraints = RigidbodyConstraints2D.FreezeAll;
+            }
+        }
+    }
 
     void Update()
     {
         vx = 0;
-        if (!IsHit && !Attacking && !Dashing)
+        if (!IsHit && !Attacking && !Dashing && !Guarding && !knuckling)
         {
             if (Input.GetKey("right"))
             {
-                vx = speed;
-                leftFlag = false;
-                Invoke("AnimOn", 0);
+                RightP();
             }
             if (Input.GetKey("left"))
             {
-                vx = -speed;
-                leftFlag = true;
-                Invoke("AnimOn", 0);
+                LeftP();
             }
             if (Input.GetKeyDown("right"))
             {
-                if (RDashing && Timer >= 3)
-                {
-                    Dashing = true;
-                    StartCoroutine(DashOn(0.01f));
-                }
-                RDashing = true;
-                LDashing = false;
-                RDashCount = 0.2f;
-                LDashCount = 0;
+                RightD();
             }
             if (Input.GetKeyDown("left"))
             {
-                if (LDashing && Timer >= 3)
-                {
-                    Dashing = true;
-                    StartCoroutine(DashOn(0.01f));
-                }
-                LDashing = true;
-                RDashing = false;
-                LDashCount = 0.2f;
-                RDashCount = 0;
+                LeftD();
             }
             if (Input.GetKeyUp("right"))
             {
-                Invoke("AnimOff", 0);
+                RightLeftU();
             }
             if (Input.GetKeyUp("left"))
             {
-                Invoke("AnimOff", 0);
+                RightLeftU();
             }
             if (Input.GetKey("space") && groundFlag)
             {
-                if (pushFlag == false)
-                {
-                    jumpFlag = true;
-                    pushFlag = true;
-                }
+                SpaceDown();
             }
             else
             {
@@ -232,13 +344,15 @@ public class Player : MonoBehaviour
 
             if (Input.GetKeyDown("a"))
             {
-                if (!Attacking && groundFlag && !Attackmotion)
-                {
-                    Attacking = true;
-                    anim.SetTrigger("isAttack");
-                    Invoke("Attack_ing", 0.8f);
-
-                }
+                ADown();
+            }
+            if (Input.GetKeyDown("s"))
+            {
+                SDown();
+            }
+            if (Input.GetKeyDown("d"))
+            {
+                DDown();
             }
         }
 
@@ -328,21 +442,30 @@ public class Player : MonoBehaviour
     private void Attack_ing()
     {
         Attacking = false;
+        RightLeftU();
     }
-
-    private void AnimOn()
+    private void Guard_End()
     {
-        anim.SetBool("isRun", true);
+        canGuard = false;
+        Guarding = false;
+        rbody.constraints = RigidbodyConstraints2D.FreezeRotation;
+        RightLeftU();
     }
-
-    private void AnimOff()
+    private void Knuckle_start()
     {
-        anim.SetBool("isRun", false);
+        AttackBoxCollider2.SetActive(true);
+    }
+    private void knuckle_end()
+    {
+        AttackBoxCollider2.SetActive(false);
+        canKnuckle = false;
+        knuckling = false;
+        RightLeftU();
     }
 
     void FixedUpdate()
     {
-        if (!Attacking && (death == 0) && !Dashing)
+        if (!Attacking && (death == 0) && !Dashing && !Guarding && !knuckling)
         {
             rbody.constraints = RigidbodyConstraints2D.FreezeRotation;
 
@@ -389,6 +512,7 @@ public class Player : MonoBehaviour
         if (collision.gameObject.tag == ("block"))
         {
             groundFlag = true;
+            pushFlag = false;
         }
     }
 
@@ -429,87 +553,99 @@ public class Player : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.transform.CompareTag("EnemyAttackBox") || collision.transform.CompareTag("Projectile"))
+        if (!Guarding)
         {
-            if (collision.transform.CompareTag("Projectile"))
+            if (collision.transform.CompareTag("EnemyAttackBox") || collision.transform.CompareTag("Projectile"))
             {
-                Destroy(collision.gameObject, 0.02f);
-            }
-
-            if (!IsHit)
-            {
-                PlayerHp--;
-                IsHit = true;
-            }
-
-            if (PlayerHp > 0)
-            {
-                rbody.velocity = Vector2.zero;
-                Invoke("isHitReset", 0.5f);
-                hitBoxCollider.SetActive(false);
-                anim.SetTrigger("isHurt");
-                rbody.constraints = RigidbodyConstraints2D.FreezeRotation;
-
-                if (transform.position.x > collision.transform.position.x)
+                if (!IsHit)
                 {
-                    transform.Translate(0.5f, 0, 0);
+                    PlayerHp--;
+                    IsHit = true;
                 }
-                else
+
+                if (PlayerHp > 0)
                 {
-                    transform.Translate(-0.5f, 0, 0);
+                    rbody.velocity = Vector2.zero;
+                    Invoke("isHitReset", 0.5f);
+                    hitBoxCollider.SetActive(false);
+                    anim.SetTrigger("isHurt");
+                    rbody.constraints = RigidbodyConstraints2D.FreezeRotation;
+
+                    if (transform.position.x > collision.transform.position.x)
+                    {
+                        transform.Translate(0.5f, 0, 0);
+                    }
+                    else
+                    {
+                        transform.Translate(-0.5f, 0, 0);
+                    }
+                    AttackBox2();
                 }
-                AttackBox2();
-            }
-            else if (PlayerHp <= 0)
-            {
-                if (death == 0)
+                else if (PlayerHp <= 0)
                 {
-                    death++;
-                    rbody.constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezeRotation;
-                    anim.SetTrigger("isDeath");
-                    Invoke("Death", 1.2f);
+                    if (death == 0)
+                    {
+                        death++;
+                        rbody.constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezeRotation;
+                        anim.SetTrigger("isDeath");
+                        Invoke("Death", 1.2f);
+                    }
+                }
+            }
+            else if (collision.transform.CompareTag("MeleeAttackBox"))
+            {
+                if (!IsHit)
+                {
+                    PlayerHp--;
+                    IsHit = true;
+                }
+
+                if (PlayerHp > 0)
+                {
+                    rbody.velocity = Vector2.zero;
+                    Invoke("isHitReset", 0.5f);
+                    hitBoxCollider.SetActive(false);
+                    anim.SetTrigger("isHurt");
+                    rbody.constraints = RigidbodyConstraints2D.FreezeRotation;
+
+                    if (transform.position.x > collision.transform.position.x)
+                    {
+                        DamLeftFlag = false;
+                        StartCoroutine(DamageOn(0.05f));
+                    }
+                    else
+                    {
+                        DamLeftFlag = true;
+                        StartCoroutine(DamageOn(0.05f));
+                    }
+                    AttackBox2();
+                }
+                else if (PlayerHp <= 0)
+                {
+                    if (death == 0)
+                    {
+                        death++;
+                        rbody.constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezeRotation;
+                        anim.SetTrigger("isDeath");
+                        Invoke("Death", 1.2f);
+                    }
                 }
             }
         }
-        else if (collision.transform.CompareTag("MeleeAttackBox"))
+        else if (Guarding)
         {
-            if (!IsHit)
+            if (collision.transform.CompareTag("EnemyAttackBox") || collision.transform.CompareTag("MeleeAttackBox"))
             {
-                PlayerHp--;
-                IsHit = true;
-            }
-
-            if (PlayerHp > 0)
-            {
-                rbody.velocity = Vector2.zero;
-                Invoke("isHitReset", 0.5f);
-                hitBoxCollider.SetActive(false);
-                anim.SetTrigger("isHurt");
-                rbody.constraints = RigidbodyConstraints2D.FreezeRotation;
-
-                if (transform.position.x > collision.transform.position.x)
-                {
-                    DamLeftFlag = false;
-                    StartCoroutine(DamageOn(0.05f));
-                }
-                else
-                {
-                    DamLeftFlag = true;
-                    StartCoroutine(DamageOn(0.05f));
-                }
-                AttackBox2();
-            }
-            else if (PlayerHp <= 0)
-            {
-                if (death == 0)
-                {
-                    death++;
-                    rbody.constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezeRotation;
-                    anim.SetTrigger("isDeath");
-                    Invoke("Death", 1.2f);
-                }
+                StartCoroutine(ParryingAttack_ing(0.1f));
             }
         }
+    }
+
+    IEnumerator ParryingAttack_ing(float waitAttackTime)
+    {
+        ParryingAttack.SetActive(true);
+        yield return new WaitForSeconds(waitAttackTime);
+        ParryingAttack.SetActive(false);
     }
 
     IEnumerator DamageOn(float waitTime)

@@ -199,10 +199,6 @@ public class Enemy : MonoBehaviour
                     DamOn = true;
                 }
             }
-            /*if (collision.transform.CompareTag("PlayerWeapon"))
-            {
-                
-            }*/
         }
     }
 }
