@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,6 +6,9 @@ using UnityEngine.UIElements;
 
 public class Player : MonoBehaviour
 {
+    public static event Action OnPlayerDamaged;
+    public Gauge gaugeSlider;
+
     public float speed;
     public float jumppower;
 
@@ -437,6 +441,8 @@ public class Player : MonoBehaviour
                 }
             }
         }
+
+        gaugeSlider.SetGauge(gauge);
     }
 
     private void Attack_ing()
@@ -560,6 +566,7 @@ public class Player : MonoBehaviour
                 if (!IsHit)
                 {
                     PlayerHp--;
+                    OnPlayerDamaged?.Invoke();
                     IsHit = true;
                 }
 
@@ -597,6 +604,7 @@ public class Player : MonoBehaviour
                 if (!IsHit)
                 {
                     PlayerHp--;
+                    OnPlayerDamaged?.Invoke();
                     IsHit = true;
                 }
 

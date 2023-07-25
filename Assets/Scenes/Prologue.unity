@@ -344,7 +344,7 @@ MonoBehaviour:
     3 "
   dialog_cnt: 3
   text_exit: 0
-  sceneName: main
+  sceneName: main_game
 --- !u!1 &420870342
 GameObject:
   m_ObjectHideFlags: 0
@@ -533,7 +533,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 07b95275c77c9104b8e0aeea3a6b30b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SceneName: main
+  SceneName: main_game
 --- !u!114 &1058318281
 MonoBehaviour:
   m_ObjectHideFlags: 0
