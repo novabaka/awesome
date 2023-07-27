@@ -15443,7 +15443,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7843415704988115363, guid: ef45d01d8c737a049b740ada5e37716d, type: 3}
       propertyPath: maxCooldown
-      value: 2
+      value: 8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
