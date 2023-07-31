@@ -80,10 +80,12 @@ public class LightKnight : Enemy
                     rb.constraints = RigidbodyConstraints2D.FreezeAll;
                 }
 
-                
-                if (Physics2D.OverlapCircle(wallCheck[0].position, 0.01f, layerMask))
+                if (Vector2.Distance(transform.position, PlayerData.Instance.Player.transform.position) >= 8.5f)
                 {
-                    EnemyFlip();
+                    if (Physics2D.OverlapCircle(wallCheck[0].position, 0.01f, layerMask))
+                    {
+                        EnemyFlip();
+                    }
                 }
 
                 if (isGround && canAtk)
