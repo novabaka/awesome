@@ -8,6 +8,8 @@ public class BlueKnight : Enemy
 
     public GameObject AttackBoxCollider;
 
+    public float range = 7.5f;
+
     private void Awake()
     {
         base.Awake();
@@ -30,13 +32,23 @@ public class BlueKnight : Enemy
             if (Physics2D.OverlapCircle(wallCheck[0].position, 0.01f, layerMask))
             {
                 EnemyFlip();
+                ABTime = 1.5f;
             }
 
-            if (Vector2.Distance(transform.position, PlayerData.Instance.Player.transform.position) < 7.5f)
+            if (Physics2D.OverlapCircle(wallCheck[0].position, 0.01f, layerMask3))
+            {
+                EnemyFlip();
+                ABTime = 1.5f;
+            }
+
+            if (Vector2.Distance(transform.position, PlayerData.Instance.Player.transform.position) < range)
             {
                 if (!IsPlayerDir() && canAtk)
                 {
-                    EnemyFlip();
+                    if (ABTime == 0)
+                    {
+                        EnemyFlip();
+                    }
                 }
             }
 
@@ -70,6 +82,13 @@ public class BlueKnight : Enemy
         {
             Hit_ing = false;
             AttackEnd();
+        }
+
+        if (EndCheck.EndChecking)
+        {
+            EndCheck_ing = true;
+            EndCheck.BKnightCount++;
+            Destroy(gameObject);
         }
     }
 }

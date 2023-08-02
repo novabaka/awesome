@@ -15,6 +15,10 @@ TagManager:
   - EnemyAttackBox
   - EnemyGuardBox
   - MeleeAttackBox
+  - FallCheck
+  - AirBlock
+  - TPCheck
+  - SwitchCheck
   layers:
   - Default
   - TransparentFX
@@ -24,7 +28,7 @@ TagManager:
   - UI
   - 
   - Check
-  - 
+  - AirBlock
   - Player
   - Platform
   - PlayerHitBox
@@ -37,8 +41,8 @@ TagManager:
   - EnemyAttackBox
   - EnemyGuardBox
   - 
-  - 
-  - 
+  - FallCheck
+  - TPCheck
   - 
   - 
   - 
@@ -51,4 +55,7 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Player
+    uniqueID: 533300923
     locked: 0
