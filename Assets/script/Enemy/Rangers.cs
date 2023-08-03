@@ -34,6 +34,21 @@ public class Rangers : Enemy
         StartCoroutine(FSM());
     }
 
+    void Update()
+    {
+        if (Physics2D.OverlapCircle(wallCheck[0].position, 0.01f, layerMask))
+        {
+            EnemyFlip();
+            ABTime = 1.5f;
+        }
+
+        if (Physics2D.OverlapCircle(wallCheck[0].position, 0.01f, layerMask3))
+        {
+            EnemyFlip();
+            ABTime = 1.5f;
+        }
+    }
+
     IEnumerator FSM()
     {
         while (true)
@@ -104,7 +119,7 @@ public class Rangers : Enemy
     {
         yield return null;
 
-        if (Vector2.Distance(transform.position, PlayerData.Instance.Player.transform.position) < 1.8f)
+        if (Vector2.Distance(transform.position, PlayerData.Instance.Player.transform.position) < 4.1f)
         {
             if (!IsPlayerDir())
             {
