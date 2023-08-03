@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -6,6 +7,9 @@ using UnityEngine.UIElements;
 
 public class Player : MonoBehaviour
 {
+    public static event Action OnPlayerDamaged;
+    public Gauge gaugeSlider;
+
     public float speed;
     public float jumppower;
 
@@ -243,19 +247,19 @@ public class Player : MonoBehaviour
             Dashing = false;
         }
     }
-    void RightP()
+    public void RightP()
     {
         vx = speed;
         leftFlag = false;
         anim.SetBool("isRun", true);
     }
-    void LeftP()
+    public void LeftP()
     {
         vx = -speed;
         leftFlag = true;
         anim.SetBool("isRun", true);
     }
-    void RightD()
+    public void RightD()
     {
         if (RDashing && Timer >= 3)
         {
@@ -267,7 +271,7 @@ public class Player : MonoBehaviour
         RDashCount = 0.2f;
         LDashCount = 0;
     }
-    void LeftD()
+    public void LeftD()
     {
         if (LDashing && Timer >= 3)
         {
@@ -279,19 +283,20 @@ public class Player : MonoBehaviour
         LDashCount = 0.2f;
         RDashCount = 0;
     }
-    void RightLeftU()
+    public void RightLeftU()
     {
         anim.SetBool("isRun", false);
+        vx = 0;
     }
-    void SpaceDown()
+    public void SpaceDown()
     {
-        if (pushFlag == false)
+        if (pushFlag == false && groundFlag)
         {
             jumpFlag = true;
             pushFlag = true;
         }
     }
-    void ADown()
+    public void ADown()
     {
         if (!Attacking && groundFlag && !Attackmotion && !Guarding && !knuckling && !AttackCoolT)
         {
@@ -301,7 +306,7 @@ public class Player : MonoBehaviour
 
         }
     }
-    void SDown()
+    public void SDown()
     {
         if (!Attacking && groundFlag && !Attackmotion && !Guarding && !knuckling)
         {
@@ -313,7 +318,7 @@ public class Player : MonoBehaviour
             }
         }
     }
-    void DDown()
+    public void DDown()
     {
         if (!Attacking && groundFlag && !Attackmotion && !Guarding && !knuckling)
         {
@@ -328,7 +333,6 @@ public class Player : MonoBehaviour
 
     void Update()
     {
-        vx = 0;
         if (!IsHit && !Attacking && !Dashing && !Guarding && !knuckling)
         {
             if (Input.GetKey("right"))
@@ -355,7 +359,7 @@ public class Player : MonoBehaviour
             {
                 RightLeftU();
             }
-            if (Input.GetKey("space") && groundFlag)
+            if (Input.GetKey("space"))
             {
                 SpaceDown();
             }
@@ -410,6 +414,8 @@ public class Player : MonoBehaviour
                 }
             }
         }
+
+        gaugeSlider.SetGauge(gauge);
     }
 
     private void Attack_ing()
@@ -529,6 +535,7 @@ public class Player : MonoBehaviour
                 if (!IsHit)
                 {
                     PlayerHp--;
+                    OnPlayerDamaged?.Invoke();
                     IsHit = true;
                 }
 
@@ -566,6 +573,7 @@ public class Player : MonoBehaviour
                 if (!IsHit)
                 {
                     PlayerHp--;
+                    OnPlayerDamaged?.Invoke();
                     IsHit = true;
                 }
 
