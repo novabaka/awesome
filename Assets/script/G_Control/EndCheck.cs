@@ -39,13 +39,13 @@ public class EndCheck : MonoBehaviour
         {
             EndChecking = true;
             Destroy(collision.gameObject);
-            StartCoroutine(camera());
+            StartCoroutine(Ecamera());
             StartCoroutine(End());
             StartCoroutine(EndSummon());
         }
     }
 
-    IEnumerator camera()
+    IEnumerator Ecamera()
     {
         yield return new WaitForSeconds(0.1f);
         C_Camera.number = Enumber + 1;

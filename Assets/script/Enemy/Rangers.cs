@@ -62,11 +62,14 @@ public class Rangers : Enemy
         yield return null;
         MyAnimSetTrigger("Idle");
 
-        if (Random.value > 0.5f)
+        if (ABTime <= 0)
         {
-            EnemyFlip();
+            if (Random.value > 0.5f)
+            {
+                EnemyFlip();
+                yield return Delay1000;
+            }
         }
-        yield return Delay1000;
         currentState = State.Run;
     }
     IEnumerator Run()
@@ -81,11 +84,6 @@ public class Rangers : Enemy
             {
                 rb.constraints = RigidbodyConstraints2D.FreezeRotation;
                 rb.velocity = new Vector2(-transform.localScale.x * moveSpeed, rb.velocity.y);
-
-                if ((Physics2D.OverlapCircle(wallCheck[0].position, 0.01f, layerMask)) || (Physics2D.OverlapCircle(wallCheck[0].position, 0.01f, layerMask3)))
-                {
-                    EnemyFlip();
-                }
 
                 if (canAtk)
                 {

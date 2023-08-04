@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -6,6 +7,9 @@ using UnityEngine.UIElements;
 
 public class Player : MonoBehaviour
 {
+    public static event Action OnPlayerDamaged;
+    public Gauge gaugeSlider;
+
     public float speed;
     public float jumppower;
 
@@ -35,8 +39,6 @@ public class Player : MonoBehaviour
 
     int count1 = 0;
     int count2 = 0;
-    int count3 = 0;
-    int count4 = 0;
 
     bool IsHit = false;
     public float hitRecovery = 0.2f;
@@ -44,7 +46,6 @@ public class Player : MonoBehaviour
 
     int AttackBox = 0;
     bool AttackBoxs = false;
-    bool AttackBoxss = false;
 
     float vx = 0;
     int leftFlip = 0;
@@ -243,19 +244,19 @@ public class Player : MonoBehaviour
             Dashing = false;
         }
     }
-    void RightP()
+    public void RightP()
     {
         vx = speed;
         leftFlag = false;
         anim.SetBool("isRun", true);
     }
-    void LeftP()
+    public void LeftP()
     {
         vx = -speed;
         leftFlag = true;
         anim.SetBool("isRun", true);
     }
-    void RightD()
+    public void RightD()
     {
         if (RDashing && Timer >= 3)
         {
@@ -267,7 +268,7 @@ public class Player : MonoBehaviour
         RDashCount = 0.2f;
         LDashCount = 0;
     }
-    void LeftD()
+    public void LeftD()
     {
         if (LDashing && Timer >= 3)
         {
@@ -279,11 +280,11 @@ public class Player : MonoBehaviour
         LDashCount = 0.2f;
         RDashCount = 0;
     }
-    void RightLeftU()
+    public void RightLeftU()
     {
         anim.SetBool("isRun", false);
     }
-    void SpaceDown()
+    public void SpaceDown()
     {
         if (pushFlag == false)
         {
@@ -291,7 +292,7 @@ public class Player : MonoBehaviour
             pushFlag = true;
         }
     }
-    void ADown()
+    public void ADown()
     {
         if (!Attacking && groundFlag && !Attackmotion && !Guarding && !knuckling && !AttackCoolT)
         {
@@ -301,7 +302,7 @@ public class Player : MonoBehaviour
 
         }
     }
-    void SDown()
+    public void SDown()
     {
         if (!Attacking && groundFlag && !Attackmotion && !Guarding && !knuckling)
         {
@@ -313,7 +314,7 @@ public class Player : MonoBehaviour
             }
         }
     }
-    void DDown()
+    public void DDown()
     {
         if (!Attacking && groundFlag && !Attackmotion && !Guarding && !knuckling)
         {
@@ -512,12 +513,9 @@ public class Player : MonoBehaviour
         Attackmotion = false;
 
         AttackBoxs = false;
-        AttackBoxss = false;
 
         count1 = 0;
         count2 = 0;
-        count3 = 0;
-        count4 = 0;
     }
 
     void OnTriggerEnter2D(Collider2D collision)
@@ -566,6 +564,7 @@ public class Player : MonoBehaviour
                 if (!IsHit)
                 {
                     PlayerHp--;
+                    OnPlayerDamaged?.Invoke();
                     IsHit = true;
                 }
 
