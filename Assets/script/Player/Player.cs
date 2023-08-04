@@ -72,6 +72,7 @@ public class Player : MonoBehaviour
 
     void Awake()
     {
+        gaugeSlider.SetMaxGauge(30);
         anim = GetComponent<Animator>();
         AttackBoxCollider.SetActive(false);
         AttackBoxCollider2.SetActive(false);
@@ -282,11 +283,12 @@ public class Player : MonoBehaviour
     }
     public void RightLeftU()
     {
+        vx = 0;
         anim.SetBool("isRun", false);
     }
     public void SpaceDown()
     {
-        if (pushFlag == false)
+        if (pushFlag == false && groundFlag)
         {
             jumpFlag = true;
             pushFlag = true;
@@ -329,7 +331,6 @@ public class Player : MonoBehaviour
 
     void Update()
     {
-        vx = 0;
         if (!IsHit && !Attacking && !Dashing && !Guarding && !knuckling)
         {
             if (Input.GetKey("right"))
@@ -411,6 +412,7 @@ public class Player : MonoBehaviour
                 }
             }
         }
+        gaugeSlider.SetGauge(gauge);
     }
 
     private void Attack_ing()
@@ -527,6 +529,7 @@ public class Player : MonoBehaviour
                 if (!IsHit)
                 {
                     PlayerHp--;
+                    OnPlayerDamaged?.Invoke();
                     IsHit = true;
                 }
 
@@ -614,6 +617,7 @@ public class Player : MonoBehaviour
         if (!IsHit)
         {
             PlayerHp--;
+            OnPlayerDamaged?.Invoke();
             IsHit = true;
         }
 
