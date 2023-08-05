@@ -9,7 +9,7 @@ EditorBuildSettings:
     path: Assets/Scenes/main_game.unity
     guid: dbb241833eb818c4f9d0a5b0ebe63773
   - enabled: 1
-    path: Assets/Scenes/Prologue.unity
+    path: Assets/Scenes/Prologue_old.unity
     guid: 2251dde1410dd184a9feea6d157c1d7a
   - enabled: 1
     path: Assets/Scenes/Start.unity
@@ -17,4 +17,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/GameOver.unity
     guid: aad9292cfda59c041a36b732d3d55dce
+  - enabled: 1
+    path: Assets/Scenes/Prologue.unity
+    guid: 1ef22d4f690bc8143a6e9260f5cfaa32
   m_configObjects: {}
