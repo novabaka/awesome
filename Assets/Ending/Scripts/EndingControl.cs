@@ -5,8 +5,8 @@ using UnityEngine;
 public class EndingControl : MonoBehaviour
 {
 
-    public BadEndTwo badend = new BadEndTwo();
-    public HappyEndTwo happyend = new HappyEndTwo();
+    public BadEndTwo badendtwo = new BadEndTwo();
+    public HappyEndTwo happyendtwo = new HappyEndTwo();
 
     public static int ending = 0;
     // Start is called before the first frame update
@@ -22,11 +22,11 @@ public class EndingControl : MonoBehaviour
         }
         else if (ending == 3)
         {
-            badend.startProcess();
+            badendtwo.startProcess();
         }
         else if(ending == 4)
         {
-            happyend.startProcess();
+            happyendtwo.startProcess();
         }
     }
 
