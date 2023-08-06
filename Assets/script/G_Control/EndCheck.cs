@@ -48,7 +48,7 @@ public class EndCheck : MonoBehaviour
 
     IEnumerator Ecamera()
     {
-        yield return new WaitForSeconds(0.1f);
+        yield return new WaitForSeconds(0.02f);
         C_Camera.number = Enumber + 1;
     }
 
@@ -58,11 +58,6 @@ public class EndCheck : MonoBehaviour
         if (Enumber == 1)
         {
             EndPlayer[0].SetActive(true);
-        }
-        else if (Enumber == 2)
-        {
-            EndPlayer[0].SetActive(true);
-            EndPlayer[1].SetActive(true);
         }
     }
 
@@ -96,13 +91,7 @@ public class EndCheck : MonoBehaviour
         }
         else if (Enumber == 2)
         {
-            for (int r = 1; r <= RangerCount; r++)
-            {
-              
-                yield return new WaitForSeconds(0.02f);
-            }
-
-
+            yield return new WaitForSeconds(0.05f);
             if (RangerCount > 4)
             {
                 Bad_End2();
