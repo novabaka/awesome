@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class EndingControl : MonoBehaviour
 {
-
+    public BadEndOne badendone = new BadEndOne();
+    public HappyEndOne happyendone = new HappyEndOne();
     public BadEndTwo badendtwo = new BadEndTwo();
     public HappyEndTwo happyendtwo = new HappyEndTwo();
 
@@ -14,11 +15,11 @@ public class EndingControl : MonoBehaviour
     {
         if(ending == 1)
         {
-            Debug.Log("BadEnd");
+            badendone.startProcess();
         }
         else if (ending == 2)
         {
-            Debug.Log("HappyEnd");
+            happyendone.startProcess();
         }
         else if (ending == 3)
         {

@@ -18,6 +18,7 @@ public class BadEndTwo : MonoBehaviour
     int time = 0;
     public void startProcess()
     {
+        camera.transform.position = new Vector3(939.46f, 113.67f, -10);
         StartCoroutine(badendProcess());
     }
 

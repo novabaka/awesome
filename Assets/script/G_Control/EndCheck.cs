@@ -91,9 +91,7 @@ public class EndCheck : MonoBehaviour
         }
         else if (Enumber == 2)
         {
-<<<<<<< Updated upstream
             yield return new WaitForSeconds(0.05f);
-=======
             yield return new WaitForSeconds(0.1f);
             for (int r = 1; r <= RangerCount; r++)
             {
@@ -102,8 +100,6 @@ public class EndCheck : MonoBehaviour
             }
 
             yield return new WaitForSeconds(0.3f);
-
->>>>>>> Stashed changes
             if (RangerCount > 4)
             {
                 Bad_End2();
