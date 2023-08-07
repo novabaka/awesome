@@ -92,14 +92,7 @@ public class EndCheck : MonoBehaviour
         else if (Enumber == 2)
         {
             yield return new WaitForSeconds(0.05f);
-            yield return new WaitForSeconds(0.1f);
-            for (int r = 1; r <= RangerCount; r++)
-            {
-                Instantiate(Ranger, SummonPoint[r].transform.position, transform.rotation);
-                yield return new WaitForSeconds(0.02f);
-            }
 
-            yield return new WaitForSeconds(0.3f);
             if (RangerCount > 4)
             {
                 Bad_End2();

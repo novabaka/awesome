@@ -10,7 +10,7 @@ public class C_Camera : MonoBehaviour
 
     public float offsetY = 0f;
     public float offsetZ = -10f;
-    public float smooth = 5f;
+    public float smooth = 0.1f;
 
     Vector3 target;
     private void LateUpdate()
