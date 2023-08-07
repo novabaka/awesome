@@ -141,7 +141,7 @@ public class Rangers : Enemy
     {
         GameObject bulletClone = Instantiate(Bullet, genPoint.position, transform.rotation);
         bulletClone.GetComponent<Rigidbody2D>().velocity = transform.right * -transform.localScale.x * 10f;
-        bulletClone.transform.localScale = new Vector2(transform.localScale.x, 1f);
+        bulletClone.transform.localScale = new Vector2(0.75f, 0.75f);
     }
 
     void FixedUpdate()
