@@ -35,6 +35,9 @@ public class Enemy : MonoBehaviour
     public LayerMask layerMask2;
     public LayerMask layerMask3;
 
+    public AudioSource theAudio;
+    public AudioClip[] sound;
+
     public float ABTime;
 
     protected void Awake()
@@ -42,6 +45,7 @@ public class Enemy : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         boxCollider = GetComponent<BoxCollider2D>();
         Anim = GetComponent<Animator>();
+        theAudio = GetComponent<AudioSource>();
 
         rb.constraints = RigidbodyConstraints2D.FreezeRotation;
 
@@ -225,6 +229,7 @@ public class Enemy : MonoBehaviour
             else if (collision.transform.CompareTag("PlayerWeapon"))
             {
                 GuardAttackD = true;
+                theAudio.PlayOneShot(sound[0]);
             }
         }
     }

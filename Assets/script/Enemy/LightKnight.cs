@@ -168,6 +168,7 @@ public class LightKnight : Enemy
     {
         if (!isGuard)
         {
+            theAudio.PlayOneShot(sound[1]);
             AttackBoxCollider.SetActive(true);
         }
         else if (isGuard)

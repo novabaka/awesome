@@ -28,11 +28,6 @@ public class EndCheck : MonoBehaviour
         {
             EndPlayer[0].SetActive(false);
         }
-        else if (Enumber == 2)
-        {
-            EndPlayer[0].SetActive(false);
-            EndPlayer[1].SetActive(false);
-        }
     }
     void OnTriggerEnter2D(Collider2D collision)
     {

@@ -70,10 +70,14 @@ public class Player : MonoBehaviour
     public GameObject hitBoxCollider;
     public GameObject ParryingAttack;
 
+    public AudioSource theAudio;
+    public AudioClip[] sound;
+
     void Awake()
     {
         gaugeSlider.SetMaxGauge(30);
         anim = GetComponent<Animator>();
+        theAudio = GetComponent<AudioSource>();
         AttackBoxCollider.SetActive(false);
         AttackBoxCollider2.SetActive(false);
         ParryingAttack.SetActive(false);
@@ -299,6 +303,7 @@ public class Player : MonoBehaviour
         if (!Attacking && groundFlag && !Attackmotion && !Guarding && !knuckling && !AttackCoolT)
         {
             Attacking = true;
+            theAudio.PlayOneShot(sound[1]);
             anim.SetTrigger("isAttack");
             Invoke("Attack_ing", 0.4f);
 
@@ -327,6 +332,11 @@ public class Player : MonoBehaviour
                 rbody.constraints = RigidbodyConstraints2D.FreezeAll;
             }
         }
+    }
+
+    public void DSound()
+    {
+        theAudio.PlayOneShot(sound[2]);
     }
 
     void Update()
@@ -603,6 +613,10 @@ public class Player : MonoBehaviour
             {
                 StartCoroutine(ParryingAttack_ing(0.1f));
             }
+            else if (collision.transform.CompareTag("Projectile"))
+            {
+                theAudio.PlayOneShot(sound[0]);
+            }
         }
 
         if (collision.transform.CompareTag("FallCheck"))
@@ -644,6 +658,7 @@ public class Player : MonoBehaviour
 
     IEnumerator ParryingAttack_ing(float waitAttackTime)
     {
+        theAudio.PlayOneShot(sound[0]);
         ParryingAttack.SetActive(true);
         yield return new WaitForSeconds(waitAttackTime);
         ParryingAttack.SetActive(false);

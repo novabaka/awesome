@@ -69,6 +69,7 @@ public class BlueKnight : Enemy
     }
     void Attacking()
     {
+        theAudio.PlayOneShot(sound[1]);
         AttackBoxCollider.SetActive(true);
     }
     void AttackEnd()

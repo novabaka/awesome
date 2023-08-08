@@ -124,6 +124,7 @@ public class Rangers : Enemy
                 EnemyFlip();
             }
             yield return Delay300;
+            theAudio.PlayOneShot(sound[1]);
             MeleeAttackBox.SetActive(true);
             yield return Delay300;
             MeleeAttackBox.SetActive(false);
@@ -139,6 +140,7 @@ public class Rangers : Enemy
 
     void Fire()
     {
+        theAudio.PlayOneShot(sound[0]);
         GameObject bulletClone = Instantiate(Bullet, genPoint.position, transform.rotation);
         bulletClone.GetComponent<Rigidbody2D>().velocity = transform.right * -transform.localScale.x * 10f;
         bulletClone.transform.localScale = new Vector2(0.75f, 0.75f);
