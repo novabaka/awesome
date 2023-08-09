@@ -11,6 +11,7 @@ public class PrologueControler : MonoBehaviour
     public KingMove king = new KingMove();
     public EnemyMove enemy1 = new EnemyMove();
     public EnemyMove enemy2 = new EnemyMove();
+    public PrologueTextTyping text = new PrologueTextTyping();
 
     public bool cameraMove = true;
     int time = 0;
@@ -94,11 +95,11 @@ public class PrologueControler : MonoBehaviour
             player.offPlayer();
             woman.offWoman();
         }
-        if (time == 800)
+        if(time == 710)
         {
-            camera.onImg();
+            text.startType();
         }
-        if(time == 1100)
+        if(time == 1300)
         {
             SceneManager.LoadScene("main_game");
         }
