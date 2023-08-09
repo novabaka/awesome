@@ -623,6 +623,20 @@ public class Player : MonoBehaviour
         {
             StartCoroutine(FallDam());
         }
+
+        if (collision.transform.CompareTag("Apple"))
+        {
+            PlayerHp++;
+            if (PlayerHp > 6)
+            {
+                PlayerHp = 6;
+            }
+        }
+
+        if (collision.transform.CompareTag("Potion"))
+        {
+            PlayerHp = 6;
+        }
     }
 
     IEnumerator FallDam()
