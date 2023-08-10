@@ -1,12 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class LightKnight : Enemy
 {
-    bool isGuard = false;
-    float GuardAttackDT = 0f;
     int RandomAtk = 0;
     public enum State
     {
@@ -18,7 +15,6 @@ public class LightKnight : Enemy
 
     public GameObject AttackBoxCollider;
     public GameObject GuardBoxCollider;
-    public GameObject GuardAttackCollider;
 
     bool atking = false;
 
@@ -35,24 +31,10 @@ public class LightKnight : Enemy
         atkCoolTimeCalc = atkCoolTime;
         AttackBoxCollider.SetActive(false);
         GuardBoxCollider.SetActive(false);
-        GuardAttackCollider.SetActive(false);
         rb.constraints = RigidbodyConstraints2D.FreezeRotation;
         DeathUse = true;
 
-        StartCoroutine(CalcGuardDT());
         StartCoroutine(FSM());
-    }
-
-    IEnumerator CalcGuardDT()
-    {
-        while (true)
-        {
-            yield return null;
-            if (GuardAttackDT > 0)
-            {
-                GuardAttackDT -= Time.deltaTime;
-            }
-        }
     }
 
     IEnumerator FSM()
@@ -88,10 +70,7 @@ public class LightKnight : Enemy
                         {
                             if (!IsPlayerDir())
                             {
-                                if (ABTime == 0)
-                                {
-                                    EnemyFlip();
-                                }
+                                EnemyFlip();
                             }
                         }
                     }
@@ -101,16 +80,10 @@ public class LightKnight : Enemy
                     rb.constraints = RigidbodyConstraints2D.FreezeAll;
                 }
 
+                
                 if (Physics2D.OverlapCircle(wallCheck[0].position, 0.01f, layerMask))
                 {
                     EnemyFlip();
-                    ABTime = 1.5f;
-                }
-
-                if (Physics2D.OverlapCircle(wallCheck[0].position, 0.01f, layerMask3))
-                {
-                    EnemyFlip();
-                    ABTime = 1.5f;
                 }
 
                 if (isGround && canAtk)
@@ -168,13 +141,11 @@ public class LightKnight : Enemy
     {
         if (!isGuard)
         {
-            theAudio.PlayOneShot(sound[1]);
             AttackBoxCollider.SetActive(true);
         }
         else if (isGuard)
         {
             GuardBoxCollider.SetActive(true);
-            nowGuarding = true;
         }
     }
     void AttackEnd()
@@ -188,7 +159,6 @@ public class LightKnight : Enemy
         {
             GuardBoxCollider.SetActive(false);
             rb.constraints = RigidbodyConstraints2D.FreezeRotation;
-            nowGuarding = false;
         }
         atking = false;
         currentState = State.Idle;
@@ -210,29 +180,5 @@ public class LightKnight : Enemy
             Hit_ing = false;
             AttackEnd();
         }
-        
-        if (GuardAttackD)
-        {
-            if (GuardAttackDT <= 0)
-            {
-                GuardAttackDT = 0.3f;
-                GuardAttackD = false;
-                StartCoroutine(GBA(0.05f));
-            }
-        }
-
-        if (EndCheck.EndChecking)
-        {
-            EndCheck_ing = true;
-            EndCheck.LKnightCount++;
-            Destroy(gameObject);
-        }
-    }
-
-    IEnumerator GBA(float gwt)
-    {
-        GuardAttackCollider.SetActive(true);
-        yield return new WaitForSeconds(gwt);
-        GuardAttackCollider.SetActive(false);
     }
 }

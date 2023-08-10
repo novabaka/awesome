@@ -4,10 +4,7 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
-    public bool EndCheck_ing = false;
-
-    public bool GuardAttackD = false;
-    public bool nowGuarding = false;
+    public bool isGuard = false;
 
     public bool DeathOn = false;
     public bool DamOn = false;
@@ -33,25 +30,17 @@ public class Enemy : MonoBehaviour
     public Animator Anim;
     public LayerMask layerMask;
     public LayerMask layerMask2;
-    public LayerMask layerMask3;
-
-    public AudioSource theAudio;
-    public AudioClip[] sound;
-
-    public float ABTime;
 
     protected void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         boxCollider = GetComponent<BoxCollider2D>();
         Anim = GetComponent<Animator>();
-        theAudio = GetComponent<AudioSource>();
 
         rb.constraints = RigidbodyConstraints2D.FreezeRotation;
 
         StartCoroutine(CalcCoolTime());
         StartCoroutine(ResetCollider());
-        StartCoroutine(CalcABTime());
     }
 
     IEnumerator ResetCollider()
@@ -81,22 +70,6 @@ public class Enemy : MonoBehaviour
                 {
                     atkCoolTimeCalc = atkCoolTime;
                     canAtk = true;
-                }
-            }
-        }
-    }
-
-    IEnumerator CalcABTime()
-    {
-        while (true)
-        {
-            yield return null;
-            if (ABTime <= 3 && ABTime > 0)
-            {
-                ABTime -= Time.deltaTime;
-                if (ABTime <= 0)
-                {
-                    ABTime = 0;
                 }
             }
         }
@@ -205,7 +178,7 @@ public class Enemy : MonoBehaviour
 
     protected void OnTriggerEnter2D(Collider2D collision)
     {
-        if (!nowGuarding)
+        if (!isGuard)
         {
             if ((collision.transform.CompareTag("PlayerWeapon")) || (collision.transform.CompareTag("PlayerWeapon2")))
             {
@@ -216,7 +189,7 @@ public class Enemy : MonoBehaviour
                 }
             }
         }
-        else if (nowGuarding)
+        else if (isGuard)
         {
             if (collision.transform.CompareTag("PlayerWeapon2"))
             {
@@ -225,11 +198,6 @@ public class Enemy : MonoBehaviour
                     TakeDamage();
                     DamOn = true;
                 }
-            }
-            else if (collision.transform.CompareTag("PlayerWeapon"))
-            {
-                GuardAttackD = true;
-                theAudio.PlayOneShot(sound[0]);
             }
         }
     }

@@ -15,12 +15,6 @@ TagManager:
   - EnemyAttackBox
   - EnemyGuardBox
   - MeleeAttackBox
-  - TPCheck
-  - SwitchCheck
-  - AirBlock
-  - FallCheck
-  - Apple
-  - Potion
   layers:
   - Default
   - TransparentFX
@@ -28,14 +22,14 @@ TagManager:
   - 
   - Water
   - UI
-  - TP
+  - 
   - Check
   - 
   - Player
   - Platform
   - PlayerHitBox
   - PlayerWeapon
-  - AB
+  - 
   - 
   - Projectile
   - Enemy
@@ -43,7 +37,7 @@ TagManager:
   - EnemyAttackBox
   - EnemyGuardBox
   - 
-  - Item
+  - 
   - 
   - 
   - 

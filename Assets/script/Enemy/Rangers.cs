@@ -34,21 +34,6 @@ public class Rangers : Enemy
         StartCoroutine(FSM());
     }
 
-    void Update()
-    {
-        if (Physics2D.OverlapCircle(wallCheck[0].position, 0.01f, layerMask))
-        {
-            EnemyFlip();
-            ABTime = 1.5f;
-        }
-
-        if (Physics2D.OverlapCircle(wallCheck[0].position, 0.01f, layerMask3))
-        {
-            EnemyFlip();
-            ABTime = 1.5f;
-        }
-    }
-
     IEnumerator FSM()
     {
         while (true)
@@ -62,14 +47,11 @@ public class Rangers : Enemy
         yield return null;
         MyAnimSetTrigger("Idle");
 
-        if (ABTime <= 0)
+        if (Random.value > 0.5f)
         {
-            if (Random.value > 0.5f)
-            {
-                EnemyFlip();
-                yield return Delay1000;
-            }
+            EnemyFlip();
         }
+        yield return Delay1000;
         currentState = State.Run;
     }
     IEnumerator Run()
@@ -85,6 +67,10 @@ public class Rangers : Enemy
                 rb.constraints = RigidbodyConstraints2D.FreezeRotation;
                 rb.velocity = new Vector2(-transform.localScale.x * moveSpeed, rb.velocity.y);
 
+                if (Physics2D.OverlapCircle(wallCheck[1].position, 0.01f, layerMask))
+                {
+                    EnemyFlip();
+                }
                 if (canAtk)
                 {
                     if (Vector2.Distance(transform.position, PlayerData.Instance.Player.transform.position) < 15f)
@@ -117,14 +103,13 @@ public class Rangers : Enemy
     {
         yield return null;
 
-        if (Vector2.Distance(transform.position, PlayerData.Instance.Player.transform.position) < 4.1f)
+        if (Vector2.Distance(transform.position, PlayerData.Instance.Player.transform.position) < 1.8f)
         {
             if (!IsPlayerDir())
             {
                 EnemyFlip();
             }
             yield return Delay300;
-            theAudio.PlayOneShot(sound[1]);
             MeleeAttackBox.SetActive(true);
             yield return Delay300;
             MeleeAttackBox.SetActive(false);
@@ -140,19 +125,8 @@ public class Rangers : Enemy
 
     void Fire()
     {
-        theAudio.PlayOneShot(sound[0]);
         GameObject bulletClone = Instantiate(Bullet, genPoint.position, transform.rotation);
         bulletClone.GetComponent<Rigidbody2D>().velocity = transform.right * -transform.localScale.x * 10f;
-        bulletClone.transform.localScale = new Vector2(transform.localScale.x / 2, 0.75f);
-    }
-
-    void FixedUpdate()
-    {
-        if (EndCheck.EndChecking)
-        {
-            EndCheck_ing = true;
-            EndCheck.RangerCount++;
-            Destroy(gameObject);
-        }
+        bulletClone.transform.localScale = new Vector2(transform.localScale.x, 1f);
     }
 }
