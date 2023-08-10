@@ -143,7 +143,7 @@ public class Rangers : Enemy
         theAudio.PlayOneShot(sound[0]);
         GameObject bulletClone = Instantiate(Bullet, genPoint.position, transform.rotation);
         bulletClone.GetComponent<Rigidbody2D>().velocity = transform.right * -transform.localScale.x * 10f;
-        bulletClone.transform.localScale = new Vector2(0.75f, 0.75f);
+        bulletClone.transform.localScale = new Vector2(transform.localScale.x / 2, 0.75f);
     }
 
     void FixedUpdate()

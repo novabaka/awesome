@@ -623,6 +623,23 @@ public class Player : MonoBehaviour
         {
             StartCoroutine(FallDam());
         }
+
+        if (collision.transform.CompareTag("Apple"))
+        {
+            Destroy(collision.gameObject);
+            PlayerHp++;
+            PlayerHp++;
+            if (PlayerHp > 6)
+            {
+                PlayerHp = 6;
+            }
+        }
+
+        if (collision.transform.CompareTag("Potion"))
+        {
+            Destroy(collision.gameObject);
+            PlayerHp = 6;
+        }
     }
 
     IEnumerator FallDam()
