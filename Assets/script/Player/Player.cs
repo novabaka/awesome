@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -36,12 +37,8 @@ public class Player : MonoBehaviour
 
     int Weaponnum = 0;
 
-    bool GAtkcheck = false;
-
     int count1 = 0;
     int count2 = 0;
-    int count3 = 0;
-    int count4 = 0;
 
     bool IsHit = false;
     public float hitRecovery = 0.2f;
@@ -49,7 +46,6 @@ public class Player : MonoBehaviour
 
     int AttackBox = 0;
     bool AttackBoxs = false;
-    bool AttackBoxss = false;
 
     float vx = 0;
     int leftFlip = 0;
@@ -61,6 +57,10 @@ public class Player : MonoBehaviour
     bool Attacking = false;
     bool Attackmotion = false;
 
+    bool AttackCoolT = false;
+    float AttackCool;
+    public float CalcAttackCool;
+
     Rigidbody2D rbody; // 리지드바디 가져오는 코드
     Animator anim; // 애니메이터 가져오는 코드
 
@@ -70,13 +70,20 @@ public class Player : MonoBehaviour
     public GameObject hitBoxCollider;
     public GameObject ParryingAttack;
 
+    public AudioSource theAudio;
+    public AudioClip[] sound;
+
     void Awake()
     {
+        gaugeSlider.SetMaxGauge(30);
         anim = GetComponent<Animator>();
+        theAudio = GetComponent<AudioSource>();
         AttackBoxCollider.SetActive(false);
         AttackBoxCollider2.SetActive(false);
         ParryingAttack.SetActive(false);
 
+        AttackCool = 0.1f;
+        CalcAttackCool = AttackCool;
         GuardCool = 1f;
         GuardCoolCalc = GuardCool;
         KnuckleCool = 5f;
@@ -87,6 +94,23 @@ public class Player : MonoBehaviour
         StartCoroutine(DashGauge());
         StartCoroutine(GuardCoolTime());
         StartCoroutine(KnuckleCoolTime());
+        StartCoroutine(AttackCoolTime());
+    }
+    IEnumerator AttackCoolTime()
+    {
+        while (true)
+        {
+            yield return null;
+            if (AttackCoolT)
+            {
+                CalcAttackCool -= Time.deltaTime;
+                if (CalcAttackCool <= 0)
+                {
+                    AttackCoolT = false;
+                    CalcAttackCool = AttackCool;
+                }
+            }
+        }
     }
 
     IEnumerator GuardCoolTime()
@@ -263,8 +287,8 @@ public class Player : MonoBehaviour
     }
     public void RightLeftU()
     {
-        anim.SetBool("isRun", false);
         vx = 0;
+        anim.SetBool("isRun", false);
     }
     public void SpaceDown()
     {
@@ -276,11 +300,12 @@ public class Player : MonoBehaviour
     }
     public void ADown()
     {
-        if (!Attacking && groundFlag && !Attackmotion && !Guarding && !knuckling)
+        if (!Attacking && groundFlag && !Attackmotion && !Guarding && !knuckling && !AttackCoolT)
         {
             Attacking = true;
+            theAudio.PlayOneShot(sound[1]);
             anim.SetTrigger("isAttack");
-            Invoke("Attack_ing", 0.8f);
+            Invoke("Attack_ing", 0.4f);
 
         }
     }
@@ -307,6 +332,11 @@ public class Player : MonoBehaviour
                 rbody.constraints = RigidbodyConstraints2D.FreezeAll;
             }
         }
+    }
+
+    public void DSound()
+    {
+        theAudio.PlayOneShot(sound[2]);
     }
 
     void Update()
@@ -337,7 +367,7 @@ public class Player : MonoBehaviour
             {
                 RightLeftU();
             }
-            if (Input.GetKey("space"))
+            if (Input.GetKey("space") && groundFlag)
             {
                 SpaceDown();
             }
@@ -391,63 +421,14 @@ public class Player : MonoBehaviour
                     AttackBoxCollider.transform.Translate(0.17f, 0, 0);
                 }
             }
-            if (AttackBox == 4)
-            {
-                if (count3 < 10)
-                {
-                    count3++;
-                    AttackBoxCollider.transform.Translate(-0.17f, 0, 0);
-                }
-            }
-            if (AttackBox == 5)
-            {
-                if (!AttackBoxss)
-                {
-                    AttackBoxss = true;
-                    AttackBoxCollider.transform.rotation = Quaternion.Euler(0, 0, 0);
-                }
-                if (count4 < 10)
-                {
-                    count4++;
-                    AttackBoxCollider.transform.Translate(-0.16f, 0, 0);
-                }
-            }
         }
-        if (!GAtkcheck)
-        {
-            if (Weapons.GuardingAtk == true)
-            {
-                GAtkcheck = true;
-                Invoke("GAtkCheck", 1f);
-                if (PlayerHp > 0)
-                {
-                    rbody.velocity = Vector2.zero;
-                    Invoke("isHitReset", 0.5f);
-                    hitBoxCollider.SetActive(false);
-                    anim.SetTrigger("isHurt");
-                    rbody.constraints = RigidbodyConstraints2D.FreezeRotation;
-                    rbody.AddForce(new Vector2(0, 2), ForceMode2D.Impulse);
-                    AttackBox2();
-                }
-                else if (PlayerHp <= 0)
-                {
-                    if (death == 0)
-                    {
-                        death++;
-                        rbody.constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezeRotation;
-                        anim.SetTrigger("isDeath");
-                        Invoke("Death", 1.2f);
-                    }
-                }
-            }
-        }
-
         gaugeSlider.SetGauge(gauge);
     }
 
     private void Attack_ing()
     {
         Attacking = false;
+        AttackCoolT = true;
         RightLeftU();
     }
     private void Guard_End()
@@ -484,7 +465,6 @@ public class Player : MonoBehaviour
                 if (leftFlip == 0)
                 {
                     leftFlip = 1;
-                    transform.Translate(-0.8f, 0, 0);
                 }
                 thisScale.x = -Mathf.Abs(thisScale.x);
             }
@@ -493,7 +473,6 @@ public class Player : MonoBehaviour
                 if (leftFlip == 1)
                 {
                     leftFlip = 0;
-                    transform.Translate(0.8f, 0, 0);
                 }
                 thisScale.x = Mathf.Abs(thisScale.x);
             }
@@ -536,25 +515,19 @@ public class Player : MonoBehaviour
         {
             AttackBoxCollider.transform.rotation = Quaternion.Euler(0, 0, -90f);
         }
-        if (AttackBox == 5)
-        {
-            AttackBoxCollider.transform.rotation = Quaternion.Euler(0, 0, 0);
-        }
     }
     private void AttackBox2()
     {
         AttackBox = 0;
+        AttackBoxCollider.transform.rotation = Quaternion.Euler(0, 0, 0);
         AttackBoxCollider.transform.position = AttackBoxTransform.transform.position;
         AttackBoxCollider.SetActive(false);
         Attackmotion = false;
 
         AttackBoxs = false;
-        AttackBoxss = false;
 
         count1 = 0;
         count2 = 0;
-        count3 = 0;
-        count4 = 0;
     }
 
     void OnTriggerEnter2D(Collider2D collision)
@@ -595,7 +568,7 @@ public class Player : MonoBehaviour
                         death++;
                         rbody.constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezeRotation;
                         anim.SetTrigger("isDeath");
-                        Invoke("Death", 1.2f);
+                        Invoke("Death", 0.75f);
                     }
                 }
             }
@@ -630,13 +603,7 @@ public class Player : MonoBehaviour
                 }
                 else if (PlayerHp <= 0)
                 {
-                    if (death == 0)
-                    {
-                        death++;
-                        rbody.constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezeRotation;
-                        anim.SetTrigger("isDeath");
-                        Invoke("Death", 1.2f);
-                    }
+                    DeathCheck();
                 }
             }
         }
@@ -646,11 +613,66 @@ public class Player : MonoBehaviour
             {
                 StartCoroutine(ParryingAttack_ing(0.1f));
             }
+            else if (collision.transform.CompareTag("Projectile"))
+            {
+                theAudio.PlayOneShot(sound[0]);
+            }
+        }
+
+        if (collision.transform.CompareTag("FallCheck"))
+        {
+            StartCoroutine(FallDam());
+        }
+
+        if (collision.transform.CompareTag("Apple"))
+        {
+            PlayerHp++;
+            if (PlayerHp > 6)
+            {
+                PlayerHp = 6;
+            }
+        }
+
+        if (collision.transform.CompareTag("Potion"))
+        {
+            PlayerHp = 6;
+        }
+    }
+
+    IEnumerator FallDam()
+    {
+        yield return new WaitForSeconds(0.2f);
+        if (!IsHit)
+        {
+            PlayerHp--;
+            OnPlayerDamaged?.Invoke();
+            IsHit = true;
+        }
+
+        if (PlayerHp > 0)
+        {
+            rbody.velocity = Vector2.zero;
+            Invoke("isHitReset", 0.5f);
+            hitBoxCollider.SetActive(false);
+            anim.SetTrigger("isHurt");
+            rbody.constraints = RigidbodyConstraints2D.FreezeRotation;
+            AttackBox2();
+        }
+        else if (PlayerHp <= 0)
+        {
+            if (death == 0)
+            {
+                death++;
+                rbody.constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezeRotation;
+                anim.SetTrigger("isDeath");
+                Invoke("Death", 0.75f);
+            }
         }
     }
 
     IEnumerator ParryingAttack_ing(float waitAttackTime)
     {
+        theAudio.PlayOneShot(sound[0]);
         ParryingAttack.SetActive(true);
         yield return new WaitForSeconds(waitAttackTime);
         ParryingAttack.SetActive(false);
@@ -685,13 +707,19 @@ public class Player : MonoBehaviour
         IsHit = false;
     }
 
-    void GAtkCheck()
-    {
-        GAtkcheck = false;
-    }
-
     void Death()
     {
         Destroy(gameObject);
+    }
+
+    void DeathCheck()
+    {
+        if (death == 0)
+        {
+            death++;
+            rbody.constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezeRotation;
+            anim.SetTrigger("isDeath");
+            Invoke("Death", 0.75f);
+        }
     }
 }
