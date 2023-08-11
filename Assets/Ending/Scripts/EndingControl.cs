@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class EndingControl : MonoBehaviour
 {
-    public BadEndOne badendone = new BadEndOne();
-    public HappyEndOne happyendone = new HappyEndOne();
-    public BadEndTwo badendtwo = new BadEndTwo();
-    public HappyEndTwo happyendtwo = new HappyEndTwo();
+    public GameObject badendone;
+    public GameObject happyendone;
+    public GameObject badendtwo;
+    public GameObject happyendtwo;
 
     public static int ending = 0;
     // Start is called before the first frame update
@@ -15,26 +15,19 @@ public class EndingControl : MonoBehaviour
     {
         if(ending == 1)
         {
-            badendone.startProcess();
+            badendone.SetActive(true);
         }
         else if (ending == 2)
         {
-            happyendone.startProcess();
+            happyendone.SetActive(true);
         }
         else if (ending == 3)
         {
-            badendtwo.startProcess();
+            badendtwo.SetActive(true);
         }
         else if(ending == 4)
         {
-            happyendtwo.startProcess();
+            happyendtwo.SetActive(true);
         }
-    }
-
-
-
-    void Update()
-    {
-        
     }
 }
