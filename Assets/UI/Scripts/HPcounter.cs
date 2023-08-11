@@ -11,11 +11,13 @@ public class HPcounter : MonoBehaviour
     private void OnEnable()
     {
         Player.OnPlayerDamaged += DrawHearts;
+        Player.OnPlayerHealed += DrawHearts;
     }
 
     private void OnDisable()
     {
         Player.OnPlayerDamaged -= DrawHearts;
+        Player.OnPlayerHealed -= DrawHearts;
     }
 
     void Start()

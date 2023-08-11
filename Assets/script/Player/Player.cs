@@ -3,10 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
 
 public class Player : MonoBehaviour
 {
+    public static event Action OnPlayerHealed;
     public static event Action OnPlayerDamaged;
     public Gauge gaugeSlider;
 
@@ -633,12 +635,14 @@ public class Player : MonoBehaviour
             {
                 PlayerHp = 6;
             }
+            OnPlayerHealed?.Invoke();
         }
 
         if (collision.transform.CompareTag("Potion"))
         {
             Destroy(collision.gameObject);
             PlayerHp = 6;
+            OnPlayerHealed?.Invoke();
         }
     }
 
@@ -712,7 +716,8 @@ public class Player : MonoBehaviour
 
     void Death()
     {
-        Destroy(gameObject);
+        this.GetComponent<SpriteRenderer>().color = Color.clear;
+        SceneManager.LoadScene("GameOver");
     }
 
     void DeathCheck()

@@ -11,7 +11,6 @@ public class ManualButton : MonoBehaviour
     [SerializeField] GameObject obj1;
     [SerializeField] GameObject obj2;
     [SerializeField] GameObject obj3;
-    [SerializeField] GameObject obj4;
     [SerializeField] GameObject obj5;
     public void onClickButton() { 
         if (on)
@@ -21,7 +20,6 @@ public class ManualButton : MonoBehaviour
             obj1.active = false;
             obj2.active = false;
             obj3.active = false;
-            obj4.active = false;
             obj5.active = true;
         }
         else
@@ -31,7 +29,6 @@ public class ManualButton : MonoBehaviour
             obj1.active = true;
             obj2.active = true;
             obj3.active = true;
-            obj4.active = true;
             obj5.active = false;
         }
         

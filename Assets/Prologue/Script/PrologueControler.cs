@@ -12,6 +12,7 @@ public class PrologueControler : MonoBehaviour
     public EnemyMove enemy1 = new EnemyMove();
     public EnemyMove enemy2 = new EnemyMove();
     public PrologueTextTyping text = new PrologueTextTyping();
+    public GameObject manual;
 
     public bool cameraMove = true;
     int time = 0;
@@ -100,6 +101,10 @@ public class PrologueControler : MonoBehaviour
             text.startType();
         }
         if(time == 1300)
+        {
+            manual.SetActive(true);
+        }
+        if(time == 1500)
         {
             SceneManager.LoadScene("main_game");
         }
