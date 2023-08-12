@@ -5,7 +5,7 @@ using UnityEngine;
 public class PauseButton : MonoBehaviour
 {
     [SerializeField] GameObject pauseMenu;
-    [SerializeField] bool pause = true;
+    [SerializeField] public bool pause = true;
     public void onClickButton()
     {
         if (pause)

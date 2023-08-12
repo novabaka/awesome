@@ -8,7 +8,7 @@ public class CoolDownUI : MonoBehaviour
     public Image fill;
     public float maxCooldown = 5f;
     private float currentCooldown;
-    private bool useSkill = false;
+    public bool useSkill = false;
 
     void Awake()
     {

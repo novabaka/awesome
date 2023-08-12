@@ -8,6 +8,7 @@ using UnityEngine.UIElements;
 
 public class Player : MonoBehaviour
 {
+
     public static event Action OnPlayerHealed;
     public static event Action OnPlayerDamaged;
     public Gauge gaugeSlider;
@@ -75,6 +76,7 @@ public class Player : MonoBehaviour
     public AudioSource theAudio;
     public AudioClip[] sound;
 
+    
     void Awake()
     {
         gaugeSlider.SetMaxGauge(30);
@@ -317,6 +319,8 @@ public class Player : MonoBehaviour
         {
             if (canGuard)
             {
+                CoolDownUI SCoolDown = GameObject.Find("SkillOne").GetComponent<CoolDownUI>();
+                SCoolDown.useSkill = true;
                 Guarding = true;
                 anim.SetTrigger("isGuard");
                 rbody.constraints = RigidbodyConstraints2D.FreezeAll;
@@ -329,6 +333,8 @@ public class Player : MonoBehaviour
         {
             if (canKnuckle)
             {
+                CoolDownUI DCoolDown = GameObject.Find("SkillTwo").GetComponent<CoolDownUI>();
+                DCoolDown.useSkill = true;
                 knuckling = true;
                 anim.SetTrigger("isKnuckle");
                 rbody.constraints = RigidbodyConstraints2D.FreezeAll;
