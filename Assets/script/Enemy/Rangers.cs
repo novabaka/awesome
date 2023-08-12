@@ -18,6 +18,7 @@ public class Rangers : Enemy
     public GameObject MeleeAttackBox;
 
     WaitForSeconds Delay1000 = new WaitForSeconds(1f);
+    WaitForSeconds Delay500 = new WaitForSeconds(0.5f);
     WaitForSeconds Delay300 = new WaitForSeconds(0.3f);
 
     void Awake()
@@ -154,5 +155,10 @@ public class Rangers : Enemy
             EndCheck.RangerCount++;
             Destroy(gameObject);
         }
+    }
+
+    public void HitTOIdle()
+    {
+        MyAnimSetTrigger("Idle");
     }
 }

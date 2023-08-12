@@ -194,11 +194,11 @@ public class Enemy : MonoBehaviour
             rb.velocity = Vector2.zero;
             if (transform.position.x > PlayerData.Instance.Player.transform.position.x)
             {
-                rb.velocity = new Vector2(2f, 0);
+                rb.velocity = new Vector2(1.5f, 0);
             }
             else
             {
-                rb.velocity = new Vector2(-2f, 0);
+                rb.velocity = new Vector2(-1.5f, 0);
             }
         }
     }
