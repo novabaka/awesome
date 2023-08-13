@@ -568,6 +568,7 @@ public class Player : MonoBehaviour
                         transform.Translate(-0.5f, 0, 0);
                     }
                     AttackBox2();
+                    knuckle_end();
                 }
                 else if (PlayerHp <= 0)
                 {
@@ -608,6 +609,7 @@ public class Player : MonoBehaviour
                         StartCoroutine(DamageOn(0.05f));
                     }
                     AttackBox2();
+                    knuckle_end();
                 }
                 else if (PlayerHp <= 0)
                 {
@@ -670,6 +672,7 @@ public class Player : MonoBehaviour
             anim.SetTrigger("isHurt");
             rbody.constraints = RigidbodyConstraints2D.FreezeRotation;
             AttackBox2();
+            knuckle_end();
         }
         else if (PlayerHp <= 0)
         {
