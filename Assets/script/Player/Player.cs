@@ -397,39 +397,6 @@ public class Player : MonoBehaviour
                 DDown();
             }
         }
-
-        if (Attackmotion && Weaponnum == 0)
-        {
-            AttackBoxCollider.SetActive(true);
-            if (AttackBox == 1)
-            {
-                if (count1 < 10)
-                {
-                    count1++;
-                    AttackBoxCollider.transform.Translate(0.16f, 0, 0);
-                }
-            }
-            if (AttackBox == 2)
-            {
-                if (!AttackBoxs)
-                {
-                    AttackBoxs = true;
-                    if (leftFlag)
-                    {
-                        AttackBoxCollider.transform.rotation = Quaternion.Euler(0, 0, 90f);
-                    }
-                    if (!leftFlag)
-                    {
-                        AttackBoxCollider.transform.rotation = Quaternion.Euler(0, 0, -90f);
-                    }
-                }
-                if (count2 < 10)
-                {
-                    count2++;
-                    AttackBoxCollider.transform.Translate(0.17f, 0, 0);
-                }
-            }
-        }
         gaugeSlider.SetGauge(gauge);
     }
 
@@ -516,26 +483,13 @@ public class Player : MonoBehaviour
 
     private void AttackBox1()
     {
-        AttackBox++;
         Attackmotion = true;
-
-        if (AttackBox == 2)
-        {
-            AttackBoxCollider.transform.rotation = Quaternion.Euler(0, 0, -90f);
-        }
+        AttackBoxCollider.SetActive(true);
     }
     private void AttackBox2()
     {
-        AttackBox = 0;
-        AttackBoxCollider.transform.rotation = Quaternion.Euler(0, 0, 0);
-        AttackBoxCollider.transform.position = AttackBoxTransform.transform.position;
         AttackBoxCollider.SetActive(false);
         Attackmotion = false;
-
-        AttackBoxs = false;
-
-        count1 = 0;
-        count2 = 0;
     }
 
     void OnTriggerEnter2D(Collider2D collision)
