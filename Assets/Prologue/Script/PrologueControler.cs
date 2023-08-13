@@ -10,6 +10,8 @@ public class PrologueControler : MonoBehaviour
     public string SceneName;
     public PlayableDirector Timeline;
     [SerializeField] PrologueTextTyping text = new PrologueTextTyping();
+    [SerializeField] GameObject GP;
+    [SerializeField] GameObject MP;
 
     private void Awake()
     {
@@ -18,7 +20,12 @@ public class PrologueControler : MonoBehaviour
     void Update()
     {
         changeTime -= Time.deltaTime;
-        if(changeTime <= 9 && changeTime >= 8.9)
+        if (changeTime <= 9.7 && changeTime >= 9.6)
+        {
+            MP.SetActive(false);
+            GP.SetActive(false);
+        }
+        else if(changeTime <= 9 && changeTime >= 8.9)
         {
             text.startType();
         }
